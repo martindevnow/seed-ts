@@ -1,4 +1,5 @@
 import requiredParam from '../../helpers/required-param';
+import sanitize from '../../helpers/sanitize';
 
 export enum Unit {
   Feet = 'FEET',
@@ -6,6 +7,7 @@ export enum Unit {
 }
 
 export interface IZoneData {
+  id?: string;
   name: string;
   length: string;
   width: string;
@@ -22,10 +24,14 @@ export default function makeZone(zoneData: IZoneData) {
   return Object.freeze(normalZone);
 
   function validate(zoneData: IZoneData) {
+    // ToDo :: Validate Dimensions
     return zoneData;
   }
 
-  function normalize(zoneData: IZoneData) {
-    return zoneData;
+  function normalize({ name, ...other }: IZoneData) {
+    return {
+      name: sanitize(name),
+      ...other,
+    };
   }
 }

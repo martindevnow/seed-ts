@@ -1,4 +1,11 @@
-export default function makeInMemoryDb() {
+export interface IDatabase {
+  findById: any;
+  insert: any;
+  list: any;
+  remove: any;
+  update: any;
+}
+export default function makeInMemoryDb(): IDatabase {
   const map = new Map();
   return Object.freeze({
     findById: async (id: string) => map.get(id),
