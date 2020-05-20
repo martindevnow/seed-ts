@@ -1,4 +1,4 @@
-import { IZoneData } from './zone';
+import makeZone, { IZoneData, IZone } from './zone';
 import { IDatabase } from '../../db';
 
 export default function makeZoneService({ database }: { database: IDatabase }) {
@@ -10,10 +10,14 @@ export default function makeZoneService({ database }: { database: IDatabase }) {
     // update,
   });
 
-  async function add({ zoneId, ...zone }: { zoneId: string; zone: IZoneData }) {
-    const db = await database;
-    if (zoneId) {
-      zone.id = zoneId;
-    }
+  async function add(zone: IZone) {
+    const db = await database.collection('zones');
+    zone.id = db.getId();
+    const result = await db.insert(zone);
+    return result;
+  }
+
+  function documentToContact(zone: IZone): IZone {
+    return makeZone(zone);
   }
 }

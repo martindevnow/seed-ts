@@ -1,13 +1,20 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export interface IDatabase {
   findById: any;
   insert: any;
   list: any;
   remove: any;
   update: any;
+  getId(id?: string): string;
+  collection(table: string): IDatabase;
 }
+
 export default function makeInMemoryDb(): IDatabase {
   const map = new Map();
-  return Object.freeze({
+  const obj = Object.freeze({
+    collection: (table: string) => obj,
+    getId: (id?: string) => id ?? uuidv4(),
     findById: async (id: string) => map.get(id),
     insert: async (item: any) => map.set(item.id, item),
     list: async () => Array.from(map.values()),
@@ -19,4 +26,5 @@ export default function makeInMemoryDb(): IDatabase {
       return map.set(item.id, { ...map.get(item.id), ...item });
     },
   });
+  return obj;
 }
