@@ -15,8 +15,12 @@ export default function makeInMemoryDb(): IDatabase {
   const obj = Object.freeze({
     collection: (table: string) => obj,
     getId: (id?: string) => id ?? uuidv4(),
-    findById: async (id: string) => map.get(id),
-    insert: async (item: any) => map.set(item.id, item),
+    findById: async (id: string) => ({ ...map.get(id), id }),
+    insert: async (item: any) => {
+      const id = obj.getId();
+      const record = map.set(id, item);
+      return { ...item, id };
+    },
     list: async () => Array.from(map.values()),
     remove: async (id: string) => map.delete(id),
     update: async (item: any) => {

@@ -19,7 +19,7 @@ export interface IZone extends IZoneData {
 }
 
 export class Zone implements IZone {
-  readonly id?: string;
+  id: string;
   readonly name: string;
   readonly length: string;
   readonly width: string;
@@ -31,7 +31,7 @@ export class Zone implements IZone {
     const normalZone = this.normalize(validZone);
 
     const { id, name, length, width, height, units } = normalZone;
-    this.id = id;
+    this.id = id || '';
     this.name = name;
     this.length = length;
     this.width = width;
@@ -53,23 +53,25 @@ export class Zone implements IZone {
   }
 }
 
-export default function makeZone(zone: IZone) {
-  if (!zone) {
-    requiredParam('zone');
-  }
-  const validZone = validate(zone);
-  const normalZone = normalize(validZone);
-  return Object.freeze(normalZone);
+export default function makeZone(zoneData: IZoneData): Zone {
+  return new Zone(zoneData);
 
-  function validate(zone: IZone) {
-    // TODO :: Validate Dimensions
-    return zone;
-  }
+  // if (!zoneData) {
+  //   requiredParam('zoneData');
+  // }
+  // const validZone = validate(zoneData);
+  // const normalZone = normalize(validZone);
+  // return Object.freeze(normalZone);
 
-  function normalize({ name, ...other }: IZone) {
-    return {
-      name: sanitize(name),
-      ...other,
-    };
-  }
+  // function validate(zoneData: IZoneData) {
+  //   // TODO :: Validate Dimensions
+  //   return zoneData;
+  // }
+
+  // function normalize({ name, ...other }: IZoneData) {
+  //   return {
+  //     name: sanitize(name),
+  //     ...other,
+  //   };
+  // }
 }
