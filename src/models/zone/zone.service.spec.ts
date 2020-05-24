@@ -48,4 +48,18 @@ describe('Model: Zone', () => {
     const actual1 = await zoneService.findById(id1);
     const actual2 = await zoneService.findById(id2);
   });
+
+  it('updates a zone', async () => {
+    const zoneService = makeZoneService({ database });
+    const mockZone = {
+      name: 'Hoth',
+      length: '4',
+      width: '2',
+      height: '5',
+      units: Unit.Feet,
+    };
+    const insertedZone = await zoneService.add(mockZone);
+    const updateData = { name: 'Pandora' };
+    await zoneService.update(insertedZone.id);
+  });
 });
