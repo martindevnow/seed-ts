@@ -1,17 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-
-export interface IDatabase {
-  findById: any;
-  insert: any;
-  list: any;
-  remove: any;
-  update: any;
-  getId(id?: string): string;
-  collection(table: string): IDatabase;
-}
+import { IDatabase } from './database.interface';
 
 export default function makeInMemoryDb(): IDatabase {
   const map = new Map();
+
   const obj = Object.freeze({
     collection: (table: string) => obj,
     getId: (id?: string) => id ?? uuidv4(),
