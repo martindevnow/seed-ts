@@ -19,7 +19,9 @@ export default function makeInMemoryDb(): IDatabase {
       if (!map.has(item.id)) {
         throw new Error('No such item');
       }
-      return map.set(item.id, { ...map.get(item.id), ...item });
+      const newItem = { ...map.get(item.id), ...item };
+      map.set(item.id, newItem);
+      return newItem;
     },
   });
   return obj;

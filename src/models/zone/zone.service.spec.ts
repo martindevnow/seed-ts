@@ -1,6 +1,7 @@
-import makeInMemoryDb, { IDatabase } from '../../db';
 import makeZoneService from './zone.service';
 import { Unit, IZone, IZoneData, Zone } from './zone';
+import { IDatabase } from '../../db/database.interface';
+import makeInMemoryDb from '../../db/in-memory.databse';
 
 describe('Model: Zone', () => {
   let database: IDatabase;
@@ -18,11 +19,9 @@ describe('Model: Zone', () => {
       units: Unit.Feet,
     };
     const actual: Zone = await zoneService.add(mockZone);
-    console.log({ actual });
     expect(actual.id).not.toBeUndefined();
     expect(actual.id).toBeTruthy();
     const expected = await zoneService.findById(actual.id);
-    console.log({ expected });
     expect(actual).toEqual(expected);
   });
 
@@ -59,7 +58,11 @@ describe('Model: Zone', () => {
       units: Unit.Feet,
     };
     const insertedZone = await zoneService.add(mockZone);
-    const updateData = { name: 'Pandora' };
-    await zoneService.update(insertedZone.id);
+    const updateData: Partial<IZone> = {
+      id: insertedZone.id,
+      name: 'Pandora',
+    };
+    const updated = await zoneService.update(updateData);
+    expect(updated.name).toEqual('Pandora');
   });
 });
