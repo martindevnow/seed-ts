@@ -5,8 +5,8 @@ export default function makeZoneService({ database }: { database: IDatabase }) {
   return Object.freeze({
     add,
     findById,
-    // getAll,
-    // remove,
+    getAll,
+    remove,
     update,
   });
 
@@ -27,14 +27,28 @@ export default function makeZoneService({ database }: { database: IDatabase }) {
     return documentToZone(zoneData);
   }
 
+  async function getAll(): Promise<IZoneData[]> {
+    const db = await database.collection('zones');
+    const results = await db.list();
+    console.log({ results });
+    return results.map(documentToZone);
+  }
+
   async function update(zoneData: Partial<IZone>): Promise<IZone> {
     const db = await database.collection('zones');
+    const existing = await db.findById(zoneData.id);
     const zone = makeZone({
-      ...db.findById(zoneData.id),
+      ...existing,
       ...zoneData,
     });
     const updatedZone = await db.update(zone);
     return documentToZone(updatedZone);
+  }
+
+  async function remove(zoneId: string): Promise<boolean> {
+    const db = await database.collection('zones');
+    const res: boolean = await db.remove(zoneId);
+    return res;
   }
 
   function documentToZone(zone: IZoneData): Zone {

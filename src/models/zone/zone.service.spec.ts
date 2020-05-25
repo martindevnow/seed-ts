@@ -64,5 +64,48 @@ describe('Model: Zone', () => {
     };
     const updated = await zoneService.update(updateData);
     expect(updated.name).toEqual('Pandora');
+    expect(updated.length).toEqual('4');
+  });
+
+  it('removes a zone', async () => {
+    const zoneService = makeZoneService({ database });
+    const mockZone = {
+      name: 'Hoth',
+      length: '4',
+      width: '2',
+      height: '5',
+      units: Unit.Feet,
+    };
+    const actual = await zoneService.add(mockZone);
+    const expected = await zoneService.findById(actual.id);
+    expect(actual).toEqual(expected);
+
+    const result = await zoneService.remove(actual.id);
+    expect(result).toBe(true);
+  });
+
+  fit('fetches all record of zones', async () => {
+    const zoneService = makeZoneService({ database });
+    const mockZone = {
+      name: 'Hoth',
+      length: '4',
+      width: '2',
+      height: '5',
+      units: Unit.Feet,
+    };
+    const mockZone2 = {
+      name: 'New Hope',
+      length: '4',
+      width: '4',
+      height: '6',
+      units: Unit.Feet,
+    };
+    const { id: id1 }: Zone = await zoneService.add(mockZone);
+    const { id: id2 }: Zone = await zoneService.add(mockZone2);
+
+    const actual = await zoneService.getAll();
+    expect(actual.length).toBe(2);
+    expect(actual[0]).toMatchObject({ id: id1 });
+    expect(actual[1]).toMatchObject({ id: id2 });
   });
 });
