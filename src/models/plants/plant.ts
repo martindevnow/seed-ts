@@ -1,7 +1,7 @@
 export enum PlantStatus {
   Seed = 'SEED',
   Germinated = 'GERMINATED',
-  Seeedling = 'SEEDLING',
+  Seedling = 'SEEDLING',
   Clone = 'CLONE',
   Vegetative = 'VEGETATIVE',
   Mother = 'MOTHER',
@@ -13,7 +13,7 @@ export enum PlantStatus {
   Gone = 'GONE',
 }
 
-export interface IPlant {
+export interface IPlantData {
   type: string;
   status: PlantStatus; // Current status of the plant
   strain?: string; // Specific strain of the plant
@@ -22,27 +22,52 @@ export interface IPlant {
   zone?: string; // UUID of the zone
 }
 
+export interface IPlant extends IPlantData {
+  id?: string;
+}
+
 export class Plant implements IPlant {
-  type: string;
-  status: PlantStatus;
-  strain?: string;
-  name?: string;
-  parent?: string;
-  zone?: string;
+  id: string;
+  readonly type: string;
+  readonly status: PlantStatus;
+  readonly strain?: string;
+  readonly name?: string;
+  readonly parent?: string;
+  readonly zone?: string;
 
   constructor(plantData: IPlant) {
-    this.type = plantData.type;
-    this.status = plantData.status;
-    this.strain = plantData.strain || '';
-    this.name = plantData.name || '';
-    this.parent = plantData.parent || '';
-    this.zone = plantData.zone || '';
+    const validPlant = this.validate(plantData);
+    const normalPlant = this.normalize(validPlant);
+
+    const { id, type, status, strain, name, parent, zone } = normalPlant;
+    this.id = id || '';
+    this.type = type;
+    this.status = status;
+    this.strain = strain || '';
+    this.name = name || '';
+    this.parent = parent || '';
+    this.zone = zone || '';
   }
+
+  private validate(plantData: IPlant): IPlant {
+    return plantData;
+  }
+
+  private normalize({ type, ...other }: IPlant): IPlant {
+    return {
+      type,
+      ...other,
+    };
+  }
+}
+
+export default function makePlant(plantData: IPlantData): Plant {
+  return new Plant(plantData);
 }
 
 const mockPlant = new Plant({
   type: 'Tomato',
-  status: PlantStatus.Seeedling,
+  status: PlantStatus.Seedling,
   strain: 'Outdoor',
   name: 'Freebie',
   zone: 'OUTDOOR_UUID',

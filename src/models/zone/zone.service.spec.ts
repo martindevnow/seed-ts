@@ -1,7 +1,8 @@
 import makeZoneService from './zone.service';
 import { Unit, IZone, IZoneData, Zone } from './zone';
 import { IDatabase } from '../../db/database.interface';
-import makeInMemoryDb from '../../db/in-memory.databse';
+import makeInMemoryDb from '../../db/in-memory.database';
+import { MOCK_ZONE } from '../../tests/helpers';
 
 describe('Model: Zone', () => {
   let database: IDatabase;
@@ -11,14 +12,7 @@ describe('Model: Zone', () => {
 
   it('creates a zone', async () => {
     const zoneService = makeZoneService({ database });
-    const mockZone = {
-      name: 'Hoth',
-      length: '4',
-      width: '2',
-      height: '5',
-      units: Unit.Feet,
-    };
-    const actual: Zone = await zoneService.add(mockZone);
+    const actual: Zone = await zoneService.add(MOCK_ZONE);
     expect(actual.id).not.toBeUndefined();
     expect(actual.id).toBeTruthy();
     const expected = await zoneService.findById(actual.id);
@@ -27,21 +21,13 @@ describe('Model: Zone', () => {
 
   it('finds a zone by id', async () => {
     const zoneService = makeZoneService({ database });
-    const mockZone = {
-      name: 'Hoth',
-      length: '4',
-      width: '2',
-      height: '5',
-      units: Unit.Feet,
-    };
     const mockZone2 = {
+      ...MOCK_ZONE,
       name: 'New Hope',
-      length: '4',
       width: '4',
       height: '6',
-      units: Unit.Feet,
     };
-    const { id: id1 }: Zone = await zoneService.add(mockZone);
+    const { id: id1 }: Zone = await zoneService.add(MOCK_ZONE);
     const { id: id2 }: Zone = await zoneService.add(mockZone2);
 
     const actual1 = await zoneService.findById(id1);
@@ -50,14 +36,7 @@ describe('Model: Zone', () => {
 
   it('updates a zone', async () => {
     const zoneService = makeZoneService({ database });
-    const mockZone = {
-      name: 'Hoth',
-      length: '4',
-      width: '2',
-      height: '5',
-      units: Unit.Feet,
-    };
-    const insertedZone = await zoneService.add(mockZone);
+    const insertedZone = await zoneService.add(MOCK_ZONE);
     const updateData: Partial<IZone> = {
       id: insertedZone.id,
       name: 'Pandora',
@@ -69,14 +48,7 @@ describe('Model: Zone', () => {
 
   it('removes a zone', async () => {
     const zoneService = makeZoneService({ database });
-    const mockZone = {
-      name: 'Hoth',
-      length: '4',
-      width: '2',
-      height: '5',
-      units: Unit.Feet,
-    };
-    const actual = await zoneService.add(mockZone);
+    const actual = await zoneService.add(MOCK_ZONE);
     const expected = await zoneService.findById(actual.id);
     expect(actual).toEqual(expected);
 
@@ -84,23 +56,15 @@ describe('Model: Zone', () => {
     expect(result).toBe(true);
   });
 
-  fit('fetches all record of zones', async () => {
+  it('fetches all records of zones', async () => {
     const zoneService = makeZoneService({ database });
-    const mockZone = {
-      name: 'Hoth',
-      length: '4',
-      width: '2',
-      height: '5',
-      units: Unit.Feet,
-    };
     const mockZone2 = {
+      ...MOCK_ZONE,
       name: 'New Hope',
-      length: '4',
       width: '4',
       height: '6',
-      units: Unit.Feet,
     };
-    const { id: id1 }: Zone = await zoneService.add(mockZone);
+    const { id: id1 }: Zone = await zoneService.add(MOCK_ZONE);
     const { id: id2 }: Zone = await zoneService.add(mockZone2);
 
     const actual = await zoneService.getAll();
