@@ -1,5 +1,5 @@
 import { Unit } from '../models/zone/zone';
-import { IPlantData, PlantStatus } from '../models/plants/plant';
+import { IPlantData, Plant, PlantStatus } from '../models/plants/plant';
 
 export const MOCK_ZONE = {
   name: 'Hoth',
@@ -14,4 +14,11 @@ export const MOCK_PLANT: IPlantData = {
   name: 'MOCK_PLANT_NAME',
   status: PlantStatus.Clone,
   strain: 'MOCK_PLANT_STRAIN',
+};
+
+export const MOCK_PLANT_2: IPlantData = {
+  type: 'Tomato',
+  status: PlantStatus.Seedling,
+  strain: 'Outdoor',
+  name: 'Freebie',
 };

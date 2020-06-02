@@ -12,7 +12,7 @@ describe('Model: Zone', () => {
 
   it('creates a zone', async () => {
     const zoneService = makeZoneService({ database });
-    const actual: Zone = await zoneService.add(MOCK_ZONE);
+    const actual: Zone = await zoneService.create(MOCK_ZONE);
     expect(actual.id).not.toBeUndefined();
     expect(actual.id).toBeTruthy();
     const expected = await zoneService.findById(actual.id);
@@ -27,8 +27,8 @@ describe('Model: Zone', () => {
       width: '4',
       height: '6',
     };
-    const { id: id1 }: Zone = await zoneService.add(MOCK_ZONE);
-    const { id: id2 }: Zone = await zoneService.add(mockZone2);
+    const { id: id1 }: Zone = await zoneService.create(MOCK_ZONE);
+    const { id: id2 }: Zone = await zoneService.create(mockZone2);
 
     const actual1 = await zoneService.findById(id1);
     const actual2 = await zoneService.findById(id2);
@@ -36,7 +36,7 @@ describe('Model: Zone', () => {
 
   it('updates a zone', async () => {
     const zoneService = makeZoneService({ database });
-    const insertedZone = await zoneService.add(MOCK_ZONE);
+    const insertedZone = await zoneService.create(MOCK_ZONE);
     const updateData: Partial<IZone> = {
       id: insertedZone.id,
       name: 'Pandora',
@@ -46,13 +46,13 @@ describe('Model: Zone', () => {
     expect(updated.length).toEqual('4');
   });
 
-  it('removes a zone', async () => {
+  it('destroys a zone', async () => {
     const zoneService = makeZoneService({ database });
-    const actual = await zoneService.add(MOCK_ZONE);
+    const actual = await zoneService.create(MOCK_ZONE);
     const expected = await zoneService.findById(actual.id);
     expect(actual).toEqual(expected);
 
-    const result = await zoneService.remove(actual.id);
+    const result = await zoneService.destroy(actual.id);
     expect(result).toBe(true);
   });
 
@@ -64,8 +64,8 @@ describe('Model: Zone', () => {
       width: '4',
       height: '6',
     };
-    const { id: id1 }: Zone = await zoneService.add(MOCK_ZONE);
-    const { id: id2 }: Zone = await zoneService.add(mockZone2);
+    const { id: id1 }: Zone = await zoneService.create(MOCK_ZONE);
+    const { id: id2 }: Zone = await zoneService.create(mockZone2);
 
     const actual = await zoneService.getAll();
     expect(actual.length).toBe(2);

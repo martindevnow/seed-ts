@@ -24,7 +24,7 @@ export default function makeInMemoryDb(): IDatabase {
         return { ...item, id };
       });
     },
-    remove: async (id: string) => map.delete(id),
+    destroy: async (id: string) => map.delete(id),
     update: async (item: any) => {
       if (!map.has(item.id)) {
         throw new Error('No such item');

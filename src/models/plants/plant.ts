@@ -65,14 +65,6 @@ export default function makePlant(plantData: IPlantData): Plant {
   return new Plant(plantData);
 }
 
-const mockPlant = new Plant({
-  type: 'Tomato',
-  status: PlantStatus.Seedling,
-  strain: 'Outdoor',
-  name: 'Freebie',
-  zone: 'OUTDOOR_UUID',
-});
-
 enum StatusUpdateType {}
 
 enum PlantActionType {

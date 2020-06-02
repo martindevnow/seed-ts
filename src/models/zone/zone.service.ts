@@ -3,15 +3,15 @@ import { IDatabase } from '../../db/database.interface';
 
 export default function makeZoneService({ database }: { database: IDatabase }) {
   return Object.freeze({
-    add,
+    create,
     findById,
     getAll,
-    remove,
+    destroy,
     update,
   });
 
   // TODO: Add a specific interface for a returned insert
-  async function add(zoneData: IZoneData): Promise<Zone> {
+  async function create(zoneData: IZoneData): Promise<Zone> {
     // Make the Zone from the data provided, this will catch errors in the Object shape
     const zone: IZoneData = makeZone(zoneData);
     // set the table for this transactions
@@ -45,9 +45,9 @@ export default function makeZoneService({ database }: { database: IDatabase }) {
     return documentToZone(updatedZone);
   }
 
-  async function remove(zoneId: string): Promise<boolean> {
+  async function destroy(zoneId: string): Promise<boolean> {
     const db = await database.collection('zones');
-    const res: boolean = await db.remove(zoneId);
+    const res: boolean = await db.destroy(zoneId);
     return res;
   }
 
