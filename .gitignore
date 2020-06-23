@@ -12,3 +12,6 @@
 ## Project Specific
 /build
 /node_modules
+
+## Yarn Error Log
+yarn-error.log

@@ -1,7 +1,13 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import adaptRequest from './helpers/adapt-request';
-import handlePlantsRequest from '../uses/plants';
+import handlePlantsRequest from '../uses/plants/index';
+
+interface UseCaseResponse {
+  headers: any;
+  statusCode: number;
+  data: any;
+}
 
 const app = express();
 
@@ -12,7 +18,7 @@ app.all('/plants', plantsController);
 function plantsController(req: express.Request, res: express.Response) {
   const httpRequest = adaptRequest(req);
   handlePlantsRequest(httpRequest)
-    .then(({ headers, statusCode, data }) => {
+    .then(({ headers, statusCode, data }: UseCaseResponse) => {
       res.set(headers).status(statusCode).send(data);
     })
     .catch((e) => {
