@@ -1,4 +1,4 @@
-import { IDatabase } from '../../db/database.interface';
+import { IDatabase } from '@mdn-seed/db';
 import makePlant, { IPlantData, Plant, IPlant } from './plant';
 
 export default function makePlantService({

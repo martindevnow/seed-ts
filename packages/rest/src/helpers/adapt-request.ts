@@ -1,5 +1,5 @@
 import express from 'express';
-import { APIRequest } from '../../core/uses/api/request.interface';
+import { APIRequest } from '../../../core/src/uses/api/request.interface';
 
 export default function (req: express.Request): Readonly<APIRequest> {
   return Object.freeze({

@@ -1,7 +1,6 @@
 import makeZoneService from './zone.service';
 import { Unit, IZone, IZoneData, Zone } from './zone';
-import { IDatabase } from '../../db/database.interface';
-import makeInMemoryDb from '../../db/in-memory.database';
+import { IDatabase, makeInMemoryDb } from '@mdn-seed/db';
 import { MOCK_ZONE } from '../../tests/helpers';
 
 describe('Model: Zone', () => {

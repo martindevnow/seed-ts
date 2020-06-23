@@ -12,6 +12,10 @@
 ## Project Specific
 /build
 /node_modules
+/packages/db/node_modules
+/packages/core/node_modules
+/packages/rest/node_modules
+
 
 ## Yarn Error Log
 yarn-error.log

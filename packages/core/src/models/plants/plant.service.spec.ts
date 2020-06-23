@@ -1,5 +1,4 @@
-import { IDatabase } from '../../db/database.interface';
-import makeInMemoryDb from '../../db/in-memory.database';
+import { IDatabase, makeInMemoryDb } from '@mdn-seed/db';
 import makePlantService from './plant.service';
 import { Plant } from './plant';
 import { MOCK_PLANT } from '../../tests/helpers';

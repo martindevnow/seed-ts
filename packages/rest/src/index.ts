@@ -1,7 +1,8 @@
+import handlePlantsRequest from '@mdn-seed/core/src/uses/plants/index';
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import adaptRequest from './helpers/adapt-request';
-import handlePlantsRequest from '../core/uses/plants/index';
 
 interface UseCaseResponse {
   headers: any;
