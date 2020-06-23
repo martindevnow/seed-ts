@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import adaptRequest from './helpers/adapt-request';
-import handlePlantsRequest from '../uses/plants/index';
+import handlePlantsRequest from '../core/uses/plants/index';
 
 interface UseCaseResponse {
   headers: any;

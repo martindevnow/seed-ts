@@ -4,6 +4,12 @@
   "main": "index.ts",
   "author": "Martin",
   "license": "MIT",
+  "private": "true",
+  "workspaces": [
+    "db",
+    "core",
+    "rest"
+  ],
   "scripts": {
     "start": "yarn build && node build/index.js",
     "start:dev": "nodemon",
