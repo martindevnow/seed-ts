@@ -2,8 +2,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { IDatabase } from './database.interface';
 
 export default function makeInMemoryDb(): IDatabase {
-  const maps = {};
-  let currentMap;
+  const maps: { [collection: string]: Map<string, any> } = {};
+  let currentMap: string;
   const obj = Object.freeze({
     collection: (table: string) => {
       currentMap = table;

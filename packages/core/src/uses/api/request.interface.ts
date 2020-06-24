@@ -3,5 +3,5 @@ export interface APIRequest {
   method: string;
   pathParams: any;
   queryParams: any;
-  body: string;
+  body: any;
 }

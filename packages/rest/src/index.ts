@@ -2,11 +2,12 @@
 
 import express from 'express';
 import bodyParser from 'body-parser';
-import adaptRequest from './helpers/adapt-request';
 
 import { makePlantService, makePlantsEndpointHandler } from '@mdn-seed/core';
 import makeFirebaseDatabase from '@mdn-seed/db/src/firebase.database';
 import { firebaseConfig } from './db/firebase';
+
+import adaptRequest from './helpers/adapt-request';
 
 const database = makeFirebaseDatabase({ config: firebaseConfig });
 const plantsService = makePlantService({ database });

@@ -1,3 +1,5 @@
+import { InvalidPropertyError } from '../../helpers/errors';
+
 export enum PlantStatus {
   Seed = 'SEED',
   Germinated = 'GERMINATED',
@@ -51,6 +53,11 @@ export class Plant implements IPlant {
   }
 
   private validate(plantData: IPlant): IPlant {
+    if (!plantData.status) {
+      throw new InvalidPropertyError(
+        `"status" is a required field for a Plant`
+      );
+    }
     return plantData;
   }
 

@@ -1,10 +1,10 @@
-export default function makeHttpError({
+export const makeHttpError = ({
   statusCode,
   errorMessage,
 }: {
   statusCode: number;
   errorMessage: any;
-}) {
+}) => {
   return {
     headers: {
       'Content-Type': 'application/json',
@@ -15,4 +15,4 @@ export default function makeHttpError({
       error: errorMessage,
     }),
   };
-}
+};
