@@ -21,12 +21,14 @@ export default function makePlantsEndpointHandler({
   };
 
   async function getPlants(httpRequest: APIRequest) {
+    const plants = await plantsService.getAll();
+    console.log({ plants });
     return {
       headers: {
         'Content-Type': 'application/json',
       },
       statusCode: 200,
-      data: [{ id: 1, name: 'Plant' }],
+      data: [...plants],
     };
   }
 

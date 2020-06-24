@@ -61,9 +61,9 @@ export class Plant implements IPlant {
   }
 }
 
-export default function makePlant(plantData: IPlantData): Plant {
+export const makePlant = (plantData: IPlantData): Plant => {
   return new Plant(plantData);
-}
+};
 
 enum StatusUpdateType {}
 

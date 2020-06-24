@@ -1,38 +1,43 @@
 import { IDatabase } from '@mdn-seed/db';
-import makePlant, { IPlantData, Plant, IPlant } from './plant';
+import { makePlant, IPlantData, Plant, IPlant } from './plant';
 
-export default function makePlantService({
-  database,
-}: {
-  database: IDatabase;
-}) {
+export const makePlantService = ({ database }: { database: IDatabase }) => {
   return Object.freeze({
     create,
     update,
+    getAll,
     findById,
   });
 
   async function create(plantData: IPlantData): Promise<Plant> {
     const plant: IPlantData = makePlant(plantData);
-    const db = await database.collection('plants');
-    const result: IPlant = await db.insert(plant);
+    await database.collection('plants');
+    const result: IPlant = await database.insert(plant);
     return documentToPlant(result);
   }
 
+  async function getAll(): Promise<Plant[]> {
+    await database.collection('plants');
+    const results = await database.list();
+    return results.map((item) => documentToPlant(item));
+  }
+
   async function update(plantData: IPlant): Promise<Plant> {
-    const db = await database.collection('plants');
-    const current = await db.findById(plantData.id);
-    const result = await db.update(makePlant({ ...current, ...plantData }));
+    await database.collection('plants');
+    const current = await database.findById(plantData.id);
+    const result = await database.update(
+      makePlant({ ...current, ...plantData })
+    );
     return documentToPlant(result);
   }
 
   async function findById(id: string): Promise<Plant> {
-    const db = await database.collection('plants');
-    const plantData = await db.findById(id);
+    await database.collection('plants');
+    const plantData = await database.findById(id);
     return documentToPlant(plantData);
   }
 
   function documentToPlant(plant: IPlantData): Plant {
     return makePlant(plant);
   }
-}
+};

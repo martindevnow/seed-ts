@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "rest": "yarn workspace @mdn-seed/rest",
+    "db": "yarn workspace @mdn-seed/db",
     "start": "yarn build && node build/index.js",
     "start:dev": "nodemon",
     "test": "jest",
