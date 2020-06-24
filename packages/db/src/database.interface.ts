@@ -29,6 +29,5 @@ export interface IDatabase {
   list: any;
   destroy: any;
   update: any;
-  getId(id?: string): string;
   collection(table: string): void;
 }

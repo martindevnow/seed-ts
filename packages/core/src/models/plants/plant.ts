@@ -36,6 +36,7 @@ export class Plant implements IPlant {
   readonly zone?: string;
 
   constructor(plantData: IPlant) {
+    console.log('new Plant() :: ', { plantData });
     const validPlant = this.validate(plantData);
     const normalPlant = this.normalize(validPlant);
 
@@ -53,15 +54,13 @@ export class Plant implements IPlant {
     return plantData;
   }
 
-  private normalize({ type, ...other }: IPlant): IPlant {
-    return {
-      type,
-      ...other,
-    };
+  private normalize(plantData: IPlant): IPlant {
+    return plantData;
   }
 }
 
 export const makePlant = (plantData: IPlantData): Plant => {
+  console.log('plant.makePlant() :: ', { plantData });
   return new Plant(plantData);
 };
 

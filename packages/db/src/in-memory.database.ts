@@ -12,21 +12,18 @@ export default function makeInMemoryDb(): IDatabase {
       }
       maps[currentMap] = new Map();
     },
-    getId: (id?: string) => id ?? uuidv4(),
     findById: async (id: string) => {
       const obj = maps[currentMap].get(id);
       return { ...maps[currentMap].get(id), id };
     },
     insert: async (item: any) => {
-      const id = obj.getId();
+      const id = uuidv4();
       const record = maps[currentMap].set(id, item);
       return { ...item, id };
     },
     list: async () => {
       const entries = Array.from(maps[currentMap].entries());
-      console.log({ entries });
       return entries.map(([id, item]) => {
-        console.log({ id, item });
         return { ...item, id };
       });
     },

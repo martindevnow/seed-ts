@@ -1,11 +1,11 @@
 import { APIRequest } from '../api/request.interface';
 import makeHttpError from '../../helpers/http-error';
 
-export default function makePlantsEndpointHandler({
+export const makePlantsEndpointHandler = ({
   plantsService,
 }: {
   plantsService: any;
-}) {
+}) => {
   return async function handle(httpRequest: APIRequest) {
     switch (httpRequest.method) {
       case 'POST':
@@ -22,7 +22,6 @@ export default function makePlantsEndpointHandler({
 
   async function getPlants(httpRequest: APIRequest) {
     const plants = await plantsService.getAll();
-    console.log({ plants });
     return {
       headers: {
         'Content-Type': 'application/json',
@@ -33,12 +32,14 @@ export default function makePlantsEndpointHandler({
   }
 
   async function postPlant(httpRequest: APIRequest) {
+    console.log('PlantsEndpoint() :: ', { httpRequest });
+    const plant = plantsService.create(httpRequest.body);
     return {
       headers: {
         'Content-Type': 'application/json',
       },
       statusCode: 200,
-      data: [{ id: 1, name: 'Plant' }],
+      data: [plant],
     };
   }
-}
+};

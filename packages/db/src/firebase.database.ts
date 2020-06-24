@@ -1,10 +1,8 @@
 import * as firebase from 'firebase';
-import { v4 as uuidv4 } from 'uuid';
 import { IDatabase } from './database.interface';
 
 export default function makeFirebaseDatabase({ config }): IDatabase {
   firebase.initializeApp(config);
-  console.log('using firebase');
   const database = firebase.firestore();
   let currentCollection = '';
   return Object.freeze({
@@ -14,7 +12,6 @@ export default function makeFirebaseDatabase({ config }): IDatabase {
     list,
     destroy,
     update,
-    getId: (id?: string) => id ?? uuidv4(),
   });
 
   async function collection(newCollection: string) {
@@ -28,12 +25,20 @@ export default function makeFirebaseDatabase({ config }): IDatabase {
   async function list() {
     const results = await database.collection(currentCollection).get();
     const data = results.docs.map((doc) => doc.data());
-    console.log({ data });
-
     return data;
   }
 
-  async function insert() {}
+  async function insert(item: any) {
+    // TODO: This should be in a try catch and return an error.
+    // Layers outside should be able to handle those and pass them up
+    // Each layer outside that getting more context to format them appropriately
+    const docRef = await database
+      .collection(currentCollection)
+      .add({ ...item });
+    const data = (await docRef.get()).data();
+    return { ...data, id: docRef.id };
+  }
+
   async function update() {}
   async function destroy() {}
 }

@@ -10,6 +10,7 @@ export const makePlantService = ({ database }: { database: IDatabase }) => {
   });
 
   async function create(plantData: IPlantData): Promise<Plant> {
+    console.log('PlantService.create() :: ', { plantData });
     const plant: IPlantData = makePlant(plantData);
     await database.collection('plants');
     const result: IPlant = await database.insert(plant);
