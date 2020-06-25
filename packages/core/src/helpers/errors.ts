@@ -23,7 +23,7 @@ export class InvalidPropertyError extends Error {
 
 export class RequiredParameterError extends Error {
   constructor(param: string) {
-    super(`${param} can not be null or undefined.`);
+    super(`"${param}" can not be null or undefined.`);
     this.name = 'RequiredParameterError';
 
     if (Error.captureStackTrace) {
@@ -39,6 +39,17 @@ export class MethodNotSupported extends Error {
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, MethodNotSupported);
+    }
+  }
+}
+
+export class DocumentNotFound extends Error {
+  constructor(identifier: string) {
+    super(`A document with the identifier ${identifier} could not be found.`);
+    this.name = 'DocumentNotFound';
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, DocumentNotFound);
     }
   }
 }

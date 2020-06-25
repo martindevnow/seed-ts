@@ -13,12 +13,17 @@ export const makePlantsEndpointHandler = ({
 }) => {
   return async function handle(httpRequest: APIRequest): Promise<APIResponse> {
     console.log('PlantsEndpoint.handle() :: ', { httpRequest });
-    const { path, method } = httpRequest;
+    const {
+      path,
+      method,
+      pathParams: { id },
+    } = httpRequest;
+    console.log({ id, path });
     switch (httpRequest.method) {
       case RequestMethod.POST:
         return postPlant(httpRequest);
       case RequestMethod.GET:
-        return getPlants(httpRequest);
+        return id ? getPlant(id) : getPlants();
       default:
         return Promise.reject(
           handleError(new MethodNotSupported(method, path))
@@ -26,7 +31,7 @@ export const makePlantsEndpointHandler = ({
     }
   };
 
-  async function getPlants(httpRequest: APIRequest) {
+  async function getPlants() {
     try {
       const plants = await plantsService.getAll();
       return handleSuccess(plants);
@@ -46,6 +51,15 @@ export const makePlantsEndpointHandler = ({
       console.error('postPlant ERROR :: ', { error });
       // The Error code is undefined.. need a way to pass along a name up to service consumer
       // this way the service can translate it into a format that is useful for the person who called it.
+      return Promise.reject(handleError(error));
+    }
+  }
+
+  async function getPlant(id: string) {
+    try {
+      const plant = await plantsService.findById(id);
+      return handleSuccess(plant);
+    } catch (error) {
       return Promise.reject(handleError(error));
     }
   }

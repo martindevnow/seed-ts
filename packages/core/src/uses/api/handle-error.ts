@@ -16,6 +16,11 @@ export const handleError = (error: any): APIErrorResponse => {
         errorCode: 405,
         error: { name, message },
       };
+    case 'DocumentNotFound':
+      return {
+        errorCode: 404,
+        error: { name, message },
+      };
     default:
       return {
         errorCode: 400,

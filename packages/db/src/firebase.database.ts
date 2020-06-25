@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
-import { IDatabase } from './database.interface';
+import { DocumentNotFound } from '@mdn-seed/core/src/helpers/errors';
+import { IDatabase } from './types/database.interface';
 
 export default function makeFirebaseDatabase({ config }): IDatabase {
   firebase.initializeApp(config);
@@ -19,13 +20,20 @@ export default function makeFirebaseDatabase({ config }): IDatabase {
   }
 
   async function findById(id: string) {
-    return await database.collection(currentCollection).doc(id);
+    const doc = await database.collection(currentCollection).doc(id).get();
+    if (!doc.exists) {
+      throw new DocumentNotFound(id);
+    }
+    console.log({ doc });
+    return { ...doc.data(), id: doc.id };
   }
 
   async function list() {
     const results = await database.collection(currentCollection).get();
-    const data = results.docs.map((doc) => doc.data());
-    return data;
+    return results.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
   }
 
   async function insert(item: any) {

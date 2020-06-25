@@ -21,6 +21,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.all('/plants', plantsController);
+app.all('/plants/:id', plantsController);
 
 function plantsController(req: express.Request, res: express.Response) {
   const httpRequest: APIRequest = adaptRequest(req);
