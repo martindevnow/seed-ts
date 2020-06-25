@@ -31,3 +31,14 @@ export class RequiredParameterError extends Error {
     }
   }
 }
+
+export class MethodNotSupported extends Error {
+  constructor(method: string, resource: string) {
+    super(`${method} method is not supported on resource ${resource}.`);
+    this.name = 'MethodNotSupported';
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, MethodNotSupported);
+    }
+  }
+}

@@ -32,7 +32,7 @@ export const makePlantService = ({ database }: { database: IDatabase }) => {
   });
 
   async function create(plantData: IPlantData): Promise<Plant> {
-    console.log('PlantService.create() :: ', { plantData });
+    // console.log('PlantService.create() :: ', { plantData });
     try {
       const plant: IPlantData = makePlant(plantData);
       await database.collection('plants');

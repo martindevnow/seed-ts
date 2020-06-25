@@ -1,9 +1,9 @@
-export const handleSuccess = (item: any) => {
+export const handleSuccess = (item: any, statusCode = 200) => {
   return {
     headers: {
       'Content-Type': 'application/json',
     },
-    statusCode: 200,
+    statusCode,
     data: item,
   };
 };

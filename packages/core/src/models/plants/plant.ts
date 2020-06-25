@@ -38,7 +38,7 @@ export class Plant implements IPlant {
   readonly zone?: string;
 
   constructor(plantData: IPlant) {
-    console.log('new Plant() :: ', { plantData });
+    // console.log('new Plant() :: ', { plantData });
     const validPlant = this.validate(plantData);
     const normalPlant = this.normalize(validPlant);
 
@@ -58,16 +58,25 @@ export class Plant implements IPlant {
         `"status" is a required field for a Plant`
       );
     }
+    if (!this.isStatusValid(plantData.status)) {
+      throw new InvalidPropertyError(
+        `"${plantData.status}" is not a valid PlantStatus`
+      );
+    }
     return plantData;
   }
 
   private normalize(plantData: IPlant): IPlant {
     return plantData;
   }
+
+  private isStatusValid(status: PlantStatus) {
+    return !!Object.values(PlantStatus).includes(status);
+  }
 }
 
 export const makePlant = (plantData: IPlantData): Plant => {
-  console.log('plant.makePlant() :: ', { plantData });
+  // console.log('plant.makePlant() :: ', { plantData });
   return new Plant(plantData);
 };
 

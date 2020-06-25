@@ -1,12 +1,12 @@
 import express from 'express';
-import { APIRequest } from '@mdn-seed/core/src/uses/api/request.interface';
+import { APIRequest, RequestMethod } from '@mdn-seed/core';
 
-export default function (req: express.Request): Readonly<APIRequest> {
+export const adaptRequest = (req: express.Request): Readonly<APIRequest> => {
   return Object.freeze({
     path: req.path,
-    method: req.method,
+    method: req.method as RequestMethod,
     pathParams: req.params,
     queryParams: req.query,
     body: req.body,
   });
-}
+};

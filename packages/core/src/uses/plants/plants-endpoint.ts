@@ -1,8 +1,7 @@
-import { APIRequest } from '../api/request.interface';
+import { APIResponse, APIRequest, RequestMethod } from '../api/types';
 import { IPlantData, makePlant } from '../../models';
-import { handleSuccess } from '../api';
-import { handleError } from '../api/handle-error';
-import { makeHttpError } from '../api/http-error';
+import { handleError, handleSuccess } from '../api';
+import { MethodNotSupported } from '../../helpers/errors';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
@@ -12,24 +11,29 @@ export const makePlantsEndpointHandler = ({
 }: {
   plantsService: any;
 }) => {
-  return async function handle(httpRequest: APIRequest) {
+  return async function handle(httpRequest: APIRequest): Promise<APIResponse> {
     console.log('PlantsEndpoint.handle() :: ', { httpRequest });
+    const { path, method } = httpRequest;
     switch (httpRequest.method) {
-      case 'POST':
+      case RequestMethod.POST:
         return postPlant(httpRequest);
-      case 'GET':
+      case RequestMethod.GET:
         return getPlants(httpRequest);
       default:
-        return makeHttpError({
-          statusCode: 405,
-          errorMessage: `${httpRequest.method} method not allowed`,
-        });
+        return Promise.reject(
+          handleError(new MethodNotSupported(method, path))
+        );
     }
   };
 
   async function getPlants(httpRequest: APIRequest) {
-    const plants = await plantsService.getAll();
-    return handleSuccess(plants);
+    try {
+      const plants = await plantsService.getAll();
+      return handleSuccess(plants);
+    } catch (error) {
+      console.error('getPlant ERROR :: ', { error });
+      return Promise.reject(handleError(error));
+    }
   }
 
   async function postPlant(httpRequest: APIRequest) {
@@ -42,7 +46,7 @@ export const makePlantsEndpointHandler = ({
       console.error('postPlant ERROR :: ', { error });
       // The Error code is undefined.. need a way to pass along a name up to service consumer
       // this way the service can translate it into a format that is useful for the person who called it.
-      return handleError(error);
+      return Promise.reject(handleError(error));
     }
   }
 };

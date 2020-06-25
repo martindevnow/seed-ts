@@ -1,2 +1,3 @@
+export * from './types';
+export * from './handle-error';
 export * from './handle-success';
-export * from './request.interface';
