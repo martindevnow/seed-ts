@@ -1,10 +1,8 @@
 import { APIErrorResponse } from '@mdn-seed/core';
 import { HttpResponse } from '../api';
 
-export const adaptError = ({
-  errorCode,
-  error,
-}: APIErrorResponse): HttpResponse => {
+export const adaptError = (errorResponse: APIErrorResponse): HttpResponse => {
+  const { error, errorCode } = errorResponse;
   return {
     headers: {
       'Content-Type': 'application/json',

@@ -1,5 +1,3 @@
-// import handlePlantsRequest from '@mdn-seed/core/src/uses/plants/index';
-
 import express from 'express';
 import bodyParser from 'body-parser';
 
@@ -9,21 +7,14 @@ import {
   APIResponse,
   APIRequest,
 } from '@mdn-seed/core';
-import makeFirebaseDatabase from '@mdn-seed/db/src/firebase.database';
-import { firebaseConfig } from './db/firebase';
-import { adaptRequest } from './helpers/adapt-request';
-import { adaptResponse } from './helpers/adapt-response';
-import { adaptError } from './helpers/adapt-error';
+import { makeFirebaseDb } from '@mdn-seed/db';
+import { adaptError, adaptResponse, adaptRequest } from './api';
 
-const database = makeFirebaseDatabase({ config: firebaseConfig });
+import { firebaseConfig } from './db/firebase';
+
+const database = makeFirebaseDb({ config: firebaseConfig });
 const plantsService = makePlantService({ database });
 const handlePlantsRequest = makePlantsEndpointHandler({ plantsService });
-
-interface UseCaseResponse {
-  headers: any;
-  statusCode: number;
-  data: any;
-}
 
 const app = express();
 
@@ -40,8 +31,6 @@ function plantsController(req: express.Request, res: express.Response) {
       res.set(headers).status(statusCode).send(data);
     })
     .catch((error) => {
-      console.log('in Catch of promise in handlePlantsRequest promise');
-      console.error(error);
       const { headers, statusCode, data } = adaptError(error);
       res.set(headers).status(statusCode).send(data);
     });
