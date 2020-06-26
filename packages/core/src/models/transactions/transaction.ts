@@ -1,4 +1,5 @@
 import { IPlant } from '../plants/plant';
+import { IZone } from '../zone/zone';
 
 export enum TransactionType {
   ChangePlantStatus = 'CHANGE_PLANT_STATUS', // req plant, date
@@ -12,4 +13,10 @@ export interface ITransaction {
   zone: IZone;
 }
 
-export class Transaction implements ITransaction {}
+export class Transaction implements ITransaction {
+  constructor(
+    public type: TransactionType,
+    public plant: IPlant,
+    public zone: IZone
+  ) {}
+}

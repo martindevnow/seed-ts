@@ -1,7 +1,7 @@
-import { APIErrorResponse } from '@mdn-seed/core';
+import { CoreErrorResponse } from '@mdn-seed/core';
 import { HttpResponse } from '../api';
 
-export const adaptError = (errorResponse: APIErrorResponse): HttpResponse => {
+export const adaptError = (errorResponse: CoreErrorResponse): HttpResponse => {
   const { error, errorCode } = errorResponse;
   return {
     headers: {

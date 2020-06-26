@@ -2,10 +2,10 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import {
-  makePlantService,
+  makePlantsService,
   makePlantsEndpointHandler,
-  APIResponse,
-  APIRequest,
+  CoreResponse,
+  CoreRequest,
 } from '@mdn-seed/core';
 import { makeFirebaseDb } from '@mdn-seed/db';
 import { adaptError, adaptResponse, adaptRequest } from './api';
@@ -13,7 +13,7 @@ import { adaptError, adaptResponse, adaptRequest } from './api';
 import { firebaseConfig } from './db/firebase';
 
 const database = makeFirebaseDb({ config: firebaseConfig });
-const plantsService = makePlantService({ database });
+const plantsService = makePlantsService({ database });
 const handlePlantsRequest = makePlantsEndpointHandler({ plantsService });
 
 const app = express();
@@ -24,10 +24,10 @@ app.all('/plants', plantsController);
 app.all('/plants/:id', plantsController);
 
 function plantsController(req: express.Request, res: express.Response) {
-  const httpRequest: APIRequest = adaptRequest(req);
+  const coreRequest: CoreRequest = adaptRequest(req);
 
-  handlePlantsRequest(httpRequest)
-    .then((response: APIResponse) => {
+  handlePlantsRequest(coreRequest)
+    .then((response: CoreResponse) => {
       const { headers, statusCode, data } = adaptResponse(response);
       res.set(headers).status(statusCode).send(data);
     })

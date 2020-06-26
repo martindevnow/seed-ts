@@ -39,7 +39,10 @@ export class Plant implements IPlant {
   readonly zone?: string;
 
   constructor(plantData: IPlant) {
-    // console.log('new Plant() :: ', { plantData });
+    if (!plantData) {
+      throw new Error('plantData undefined');
+    }
+    console.log('new Plant() :: ', { plantData });
     const validPlant = this.validate(plantData);
     const normalPlant = this.normalize(validPlant);
 

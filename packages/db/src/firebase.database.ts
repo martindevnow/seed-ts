@@ -1,8 +1,16 @@
 import * as firebase from 'firebase';
-import { DocumentNotFound } from '@mdn-seed/core/src/helpers/errors';
+import {
+  DocumentNotFoundError,
+  UniqueConstraintError,
+} from '@mdn-seed/core/src/helpers/errors';
 import { IDatabase } from './types/database.interface';
+import { FirebaseConfig } from './types/firebase-config.interface';
 
-export default function makeFirebaseDatabase({ config }): IDatabase {
+export default function makeFirebaseDatabase({
+  config,
+}: {
+  config: FirebaseConfig;
+}): IDatabase {
   firebase.initializeApp(config);
   const database = firebase.firestore();
   let currentCollection = '';
@@ -22,9 +30,8 @@ export default function makeFirebaseDatabase({ config }): IDatabase {
   async function findById(id: string) {
     const doc = await database.collection(currentCollection).doc(id).get();
     if (!doc.exists) {
-      throw new DocumentNotFound(id);
+      throw new DocumentNotFoundError(id);
     }
-    console.log({ doc });
     return { ...doc.data(), id: doc.id };
   }
 
@@ -43,10 +50,24 @@ export default function makeFirebaseDatabase({ config }): IDatabase {
     const docRef = await database
       .collection(currentCollection)
       .add({ ...item });
+    return Promise.reject(new UniqueConstraintError('id'));
     const data = (await docRef.get()).data();
     return { ...data, id: docRef.id };
   }
 
-  async function update() {}
-  async function destroy() {}
+  async function update(item: any) {
+    const docRef = await database.collection(currentCollection).doc(item.id);
+    docRef.set({ ...item }, { merge: true });
+    const updated = (await docRef.get()).data();
+    return { ...updated, id: docRef.id };
+  }
+
+  async function destroy(id: string) {
+    try {
+      await database.collection(currentCollection).doc(id).delete();
+    } catch (error) {
+      console.error('Error Deleting from Firestore :: ', { error });
+      return Promise.reject(error);
+    }
+  }
 }

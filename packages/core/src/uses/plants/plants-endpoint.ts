@@ -1,7 +1,7 @@
-import { APIResponse, APIRequest, RequestMethod } from '../api/types';
-import { IPlantData, makePlant } from '../../models';
-import { handleError, handleSuccess } from '../api';
-import { MethodNotSupported } from '../../helpers/errors';
+import { CoreResponse, CoreRequest, RequestMethod } from '../core/types';
+import { IPlantData, makePlant, IPlant } from '../../models';
+import { handleServiceError, handleSuccess } from '../core';
+import { MethodNotSupportedError } from '../../helpers/errors';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
@@ -11,22 +11,36 @@ export const makePlantsEndpointHandler = ({
 }: {
   plantsService: any;
 }) => {
-  return async function handle(httpRequest: APIRequest): Promise<APIResponse> {
-    console.log('PlantsEndpoint.handle() :: ', { httpRequest });
+  return async function handle(
+    coreRequest: CoreRequest
+  ): Promise<CoreResponse> {
+    console.log('PlantsEndpoint.handle() :: ', { coreRequest });
     const {
       path,
       method,
       pathParams: { id },
-    } = httpRequest;
+    } = coreRequest;
     console.log({ id, path });
-    switch (httpRequest.method) {
+    switch (coreRequest.method) {
       case RequestMethod.POST:
-        return postPlant(httpRequest);
+        return postPlant(coreRequest);
       case RequestMethod.GET:
         return id ? getPlant(id) : getPlants();
+      case RequestMethod.PATCH:
+        return id
+          ? updatePlant(id, coreRequest)
+          : Promise.reject(
+              handleServiceError(new MethodNotSupportedError(method, path))
+            );
+      case RequestMethod.DELETE:
+        return id
+          ? destroyPlant(id)
+          : Promise.reject(
+              handleServiceError(new MethodNotSupportedError(method, path))
+            );
       default:
         return Promise.reject(
-          handleError(new MethodNotSupported(method, path))
+          handleServiceError(new MethodNotSupportedError(method, path))
         );
     }
   };
@@ -36,22 +50,17 @@ export const makePlantsEndpointHandler = ({
       const plants = await plantsService.getAll();
       return handleSuccess(plants);
     } catch (error) {
-      console.error('getPlant ERROR :: ', { error });
-      return Promise.reject(handleError(error));
+      return Promise.reject(handleServiceError(error));
     }
   }
 
-  async function postPlant(httpRequest: APIRequest) {
-    console.log('PlantsEndpoint() :: ', { httpRequest });
+  async function postPlant(coreRequest: CoreRequest) {
     try {
-      const plantData = makePlant(httpRequest.body as IPlantData);
+      const plantData = makePlant(coreRequest.body as IPlantData);
       const plant = await plantsService.create(plantData);
       return handleSuccess(plant);
     } catch (error) {
-      console.error('postPlant ERROR :: ', { error });
-      // The Error code is undefined.. need a way to pass along a name up to service consumer
-      // this way the service can translate it into a format that is useful for the person who called it.
-      return Promise.reject(handleError(error));
+      return Promise.reject(handleServiceError(error));
     }
   }
 
@@ -60,7 +69,31 @@ export const makePlantsEndpointHandler = ({
       const plant = await plantsService.findById(id);
       return handleSuccess(plant);
     } catch (error) {
-      return Promise.reject(handleError(error));
+      return Promise.reject(handleServiceError(error));
+    }
+  }
+
+  async function updatePlant(id: string, coreRequest: CoreRequest) {
+    try {
+      const existingPlant: IPlant = await plantsService.findById(id);
+      const updatedPlant = makePlant({
+        ...existingPlant,
+        ...coreRequest.body,
+      });
+      const result = await plantsService.update(updatedPlant);
+      return handleSuccess(result);
+    } catch (error) {
+      return Promise.reject(handleServiceError(error));
+    }
+  }
+
+  async function destroyPlant(id: string) {
+    try {
+      await plantsService.findById(id);
+      await plantsService.destroy(id);
+      return handleSuccess({ success: true }, 204);
+    } catch (error) {
+      return Promise.reject(handleServiceError(error));
     }
   }
 };
