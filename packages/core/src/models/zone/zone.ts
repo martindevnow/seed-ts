@@ -1,4 +1,3 @@
-import requiredParam from '../../helpers/required-param';
 import sanitize from '../../helpers/sanitize';
 
 export enum Unit {

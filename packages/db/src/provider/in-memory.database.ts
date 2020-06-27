@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { IDatabase } from './types/database.interface';
+import { IDatabase } from '../types/database.interface';
 
 export default function makeInMemoryDb(): IDatabase {
   const maps: { [collection: string]: Map<string, any> } = {};

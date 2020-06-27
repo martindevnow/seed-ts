@@ -1,4 +1,3 @@
-export * from './plants-endpoint';
 // import { makePlantsService } from '@mdn-seed/core';
 // import { makeInMemoryDb } from '@mdn-seed/db';
 // import { makePlantsEndpointHandler } from './plants-endpoint';

@@ -6,11 +6,13 @@ import {
   makePlantsEndpointHandler,
   CoreResponse,
   CoreRequest,
-} from '@mdn-seed/core';
+} from '@mdn-seed/core/src';
 import { makeFirebaseDb } from '@mdn-seed/db';
-import { adaptError, adaptResponse, adaptRequest } from './api';
 
 import { firebaseConfig } from './db/firebase';
+import { adaptRequest } from './api/adapt-request';
+import { adaptResponse } from './api/adapt-response';
+import { adaptError } from './api/adapt-error';
 
 const database = makeFirebaseDb({ config: firebaseConfig });
 const plantsService = makePlantsService({ database });

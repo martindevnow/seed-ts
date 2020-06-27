@@ -3,8 +3,8 @@ import {
   DocumentNotFoundError,
   UniqueConstraintError,
 } from '@mdn-seed/core/src/helpers/errors';
-import { IDatabase } from './types/database.interface';
-import { FirebaseConfig } from './types/firebase-config.interface';
+import { IDatabase } from '../types/database.interface';
+import { FirebaseConfig } from '../types/firebase-config.interface';
 
 export default function makeFirebaseDatabase({
   config,

@@ -1,5 +1,7 @@
-import { InvalidPropertyError } from '../../helpers/errors';
-import requiredParam from '../../helpers/required-param';
+import {
+  InvalidPropertyError,
+  RequiredParameterError,
+} from '../../helpers/errors';
 
 export enum PlantStatus {
   Seed = 'SEED',
@@ -59,7 +61,7 @@ export class Plant implements IPlant {
   private validate(plantData: IPlant): IPlant {
     if (!plantData.status) {
       console.error('ERROR no status :: ', { plantData });
-      requiredParam('status');
+      throw new RequiredParameterError('status');
     }
     if (!this.isStatusValid(plantData.status)) {
       console.error('ERROR invalid status :: ', { plantData });

@@ -1,4 +1,4 @@
-import { makePlant, IPlantData } from './plant';
+import { makePlant, IPlantData } from '../plant';
 
 describe('Plant', () => {
   it('requires a status', () => {

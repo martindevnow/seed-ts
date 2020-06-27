@@ -1,16 +1,6 @@
 import { IDatabase } from '@mdn-seed/db';
-import { makePlant, IPlantData, Plant, IPlant } from './plant';
-import { serviceErrorFactory } from '../../uses';
-
-// export interface Service<T, R> {
-//   create: (item: T) => Promise<R>;
-//   update: (item: Partial<T>) => Promise<R>;
-//   getAll: () => Promise<Array<R>>;
-//   findById: (id: string) => Promise<R>;
-//   // documentToObj: (item: T) => R;
-// }
-
-// export interface PlantsService extends Service<IPlantData, Plant> {}
+import { IPlantData, makePlant, IPlant, Plant } from '../models/plants/plant';
+import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
 
 interface ServiceError {
   code: number;

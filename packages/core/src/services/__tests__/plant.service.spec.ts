@@ -1,6 +1,6 @@
 import { IDatabase, makeInMemoryDb } from '@mdn-seed/db';
-import { makePlantsService } from './plant.service';
-import { Plant } from './plant';
+import { makePlantsService } from '../plant.service';
+import { Plant } from '../../models/plants/plant';
 import { MOCK_PLANT } from '../../tests/helpers';
 
 describe('Model: Plant', () => {

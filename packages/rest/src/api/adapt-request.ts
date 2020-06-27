@@ -1,5 +1,8 @@
 import express from 'express';
-import { CoreRequest, RequestMethod } from '@mdn-seed/core';
+import {
+  CoreRequest,
+  RequestMethod,
+} from '@mdn-seed/core/src/uses/core/types/request.interface';
 
 export const adaptRequest = (req: express.Request): Readonly<CoreRequest> => {
   return Object.freeze({

@@ -1,7 +1,9 @@
-import { CoreResponse, CoreRequest, RequestMethod } from '../core/types';
-import { IPlantData, makePlant, IPlant } from '../../models';
-import { handleServiceError, handleSuccess } from '../core';
+import { IPlantData, makePlant, IPlant } from '../../models/plants/plant';
 import { MethodNotSupportedError } from '../../helpers/errors';
+import { CoreRequest, RequestMethod } from '../core/types/request.interface';
+import { CoreResponse } from '../core/types/response.interface';
+import { handleServiceError } from '../core/helpers/handle-error';
+import { handleSuccess } from '../core/helpers/handle-success';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
