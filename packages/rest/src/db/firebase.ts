@@ -1,3 +1,3 @@
-import { FirebaseConfig } from '@mdn-seed/db/src/types/firebase-config.interface';
+import { FirebaseConfig } from '@mdn-seed/db';
 
 export const firebaseConfig: FirebaseConfig = {};

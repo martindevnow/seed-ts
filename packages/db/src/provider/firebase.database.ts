@@ -50,7 +50,6 @@ export default function makeFirebaseDatabase({
     const docRef = await database
       .collection(currentCollection)
       .add({ ...item });
-    return Promise.reject(new UniqueConstraintError('id'));
     const data = (await docRef.get()).data();
     return { ...data, id: docRef.id };
   }

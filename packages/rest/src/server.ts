@@ -6,7 +6,7 @@ import {
   makePlantsEndpointHandler,
   CoreResponse,
   CoreRequest,
-} from '@mdn-seed/core/src';
+} from '@mdn-seed/core';
 import { makeFirebaseDb } from '@mdn-seed/db';
 
 import { firebaseConfig } from './db/firebase';
