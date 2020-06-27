@@ -1,17 +1,22 @@
-import { IPlantData, makePlant, IPlant } from '../../models/plants/plant';
+import { IPlantData, makePlant, Plant } from '../../models/plants/plant';
 import { MethodNotSupportedError } from '../../helpers/errors';
 import { CoreRequest, RequestMethod } from '../core/types/request.interface';
 import { CoreResponse } from '../core/types/response.interface';
 import { handleServiceError } from '../core/helpers/handle-error';
 import { handleSuccess } from '../core/helpers/handle-success';
+import { Service } from '../../services/service.interface';
+import { makeZoneService } from '../../services/zone.service';
+import { IZoneData, Zone } from '../../models/zones/zone';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
 // Solidify the contracts. Less implicit any
 export const makePlantsEndpointHandler = ({
   plantService,
+  zoneService,
 }: {
-  plantService: any;
+  plantService: Service<IPlantData, Plant>;
+  zoneService: Service<IZoneData, Zone>;
 }) => {
   return async function handle(
     coreRequest: CoreRequest
@@ -58,9 +63,12 @@ export const makePlantsEndpointHandler = ({
 
   async function postPlant(coreRequest: CoreRequest) {
     try {
-      const plantData = makePlant(coreRequest.body as IPlantData);
-      const plant = await plantService.create(plantData);
-      return handleSuccess(plant);
+      const plant: Plant = makePlant(coreRequest.body as IPlantData);
+      if (plant.zoneId) {
+        await zoneService.findById(plant.zoneId);
+      }
+      const createdPlant = await plantService.create(plant);
+      return handleSuccess(createdPlant);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }
@@ -68,7 +76,7 @@ export const makePlantsEndpointHandler = ({
 
   async function getPlant(id: string) {
     try {
-      const plant = await plantService.findById(id);
+      const plant: Plant = await plantService.findById(id);
       return handleSuccess(plant);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
@@ -77,11 +85,14 @@ export const makePlantsEndpointHandler = ({
 
   async function updatePlant(id: string, coreRequest: CoreRequest) {
     try {
-      const existingPlant: IPlant = await plantService.findById(id);
+      const existingPlant: Plant = await plantService.findById(id);
       const updatedPlant = makePlant({
         ...existingPlant,
         ...coreRequest.body,
       });
+      if (updatedPlant.zoneId) {
+        await zoneService.findById(updatedPlant.zoneId);
+      }
       const result = await plantService.update(updatedPlant);
       return handleSuccess(result);
     } catch (error) {

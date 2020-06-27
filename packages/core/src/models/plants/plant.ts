@@ -25,7 +25,7 @@ export interface IPlantData {
   strain?: string; // Specific strain of the plant
   name?: string; // The name given to this particular plant
   parent?: string; // UUID of parent IF is a clone
-  zone?: string; // UUID of the zone
+  zoneId?: string; // UUID of the zone
 }
 
 export interface IPlant extends IPlantData {
@@ -39,7 +39,7 @@ export class Plant implements IPlant {
   readonly strain?: string;
   readonly name?: string;
   readonly parent?: string;
-  readonly zone?: string;
+  readonly zoneId?: string;
 
   constructor(plantData: IPlant) {
     if (!plantData) {
@@ -49,14 +49,14 @@ export class Plant implements IPlant {
     const validPlant = this.validate(plantData);
     const normalPlant = this.normalize(validPlant);
 
-    const { id, type, status, strain, name, parent, zone } = normalPlant;
+    const { id, type, status, strain, name, parent, zoneId } = normalPlant;
     this.id = id || '';
     this.type = type;
     this.status = status;
     this.strain = strain || null;
     this.name = name || null;
     this.parent = parent || null;
-    this.zone = zone || null;
+    this.zoneId = zoneId || null;
   }
 
   private validate(plantData: IPlant): IPlant {

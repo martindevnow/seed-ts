@@ -18,8 +18,11 @@ import { adaptError } from './api/helpers/adapt-error';
 
 const database = makeFirebaseDb({ config: firebaseConfig });
 const plantService = makePlantService({ database });
-const handlePlantsRequest = makePlantsEndpointHandler({ plantService });
 const zoneService = makeZoneService({ database });
+const handlePlantsRequest = makePlantsEndpointHandler({
+  plantService,
+  zoneService,
+});
 const handleZonesRequest = makeZonesEndpointHandler({ zoneService });
 
 const app = express();

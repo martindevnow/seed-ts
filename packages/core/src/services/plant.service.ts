@@ -1,8 +1,13 @@
 import { IDatabase } from '@mdn-seed/db';
 import { IPlantData, makePlant, IPlant, Plant } from '../models/plants/plant';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
+import { Service } from './service.interface';
 
-export const makePlantService = ({ database }: { database: IDatabase }) => {
+export const makePlantService = ({
+  database,
+}: {
+  database: IDatabase;
+}): Service<IPlantData, Plant> => {
   return Object.freeze({
     create,
     update,
@@ -12,7 +17,11 @@ export const makePlantService = ({ database }: { database: IDatabase }) => {
   });
 
   async function create(plantData: IPlantData): Promise<Plant> {
-    // console.log('PlantService.create() :: ', { plantData });
+    // TODO: Determine if this is worth it to wrap this layer in try catch block
+    // How does the consumer want the error to be formatted?
+    // Who should expect the thrown error?
+    // Does each layer require it's own Error types/format?
+    // Need to consider form validation? (since makePlant is being called )
     try {
       const plant: IPlantData = makePlant(plantData);
       await database.collection('plants');
