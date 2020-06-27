@@ -1,5 +1,6 @@
 import { IDatabase } from '@mdn-seed/db';
 import { makePlant, IPlantData, Plant, IPlant } from './plant';
+import { serviceErrorFactory } from '../../uses';
 
 // export interface Service<T, R> {
 //   create: (item: T) => Promise<R>;
@@ -23,12 +24,13 @@ enum ServiceErrors {
   MissingData = 'MissingData',
 }
 
-export const makePlantService = ({ database }: { database: IDatabase }) => {
+export const makePlantsService = ({ database }: { database: IDatabase }) => {
   return Object.freeze({
     create,
     update,
     getAll,
     findById,
+    destroy,
   });
 
   async function create(plantData: IPlantData): Promise<Plant> {
@@ -39,7 +41,7 @@ export const makePlantService = ({ database }: { database: IDatabase }) => {
       const result: IPlant = await database.insert(plant);
       return documentToObj(result);
     } catch (e) {
-      return Promise.reject(errorToObj(e));
+      return Promise.reject(serviceErrorFactory(e));
     }
   }
 
@@ -52,9 +54,8 @@ export const makePlantService = ({ database }: { database: IDatabase }) => {
   async function update(plantData: IPlant): Promise<Plant> {
     await database.collection('plants');
     const current = await database.findById(plantData.id);
-    const result = await database.update(
-      makePlant({ ...current, ...plantData })
-    );
+    const newPlant = makePlant({ ...current, ...plantData });
+    const result = await database.update(newPlant);
     return documentToObj(result);
   }
 
@@ -64,16 +65,13 @@ export const makePlantService = ({ database }: { database: IDatabase }) => {
     return documentToObj(plantData);
   }
 
-  function documentToObj(plant: IPlantData): Plant {
-    return makePlant(plant);
+  async function destroy(id: string): Promise<boolean> {
+    await database.collection('plants');
+    const plant = await database.destroy(id);
+    return !!plant;
   }
 
-  function errorToObj(error: any): ServiceError {
-    console.error({ error });
-    return {
-      code: error.code,
-      message: error.name + ' ' + error.message,
-      details: error.stack,
-    };
+  function documentToObj(plant: IPlantData): Plant {
+    return makePlant(plant);
   }
 };

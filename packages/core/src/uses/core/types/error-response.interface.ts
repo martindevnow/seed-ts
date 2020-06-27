@@ -1,4 +1,4 @@
-export interface APIErrorResponse {
+export interface CoreErrorResponse {
   errorCode: number;
   error: any;
 }

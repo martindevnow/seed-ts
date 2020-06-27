@@ -32,24 +32,24 @@ export class RequiredParameterError extends Error {
   }
 }
 
-export class MethodNotSupported extends Error {
+export class MethodNotSupportedError extends Error {
   constructor(method: string, resource: string) {
     super(`${method} method is not supported on resource ${resource}.`);
-    this.name = 'MethodNotSupported';
+    this.name = 'MethodNotSupportedError';
 
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, MethodNotSupported);
+      Error.captureStackTrace(this, MethodNotSupportedError);
     }
   }
 }
 
-export class DocumentNotFound extends Error {
+export class DocumentNotFoundError extends Error {
   constructor(identifier: string) {
-    super(`A document with the identifier ${identifier} could not be found.`);
-    this.name = 'DocumentNotFound';
+    super(`A document with the identifier "${identifier}" could not be found.`);
+    this.name = 'DocumentNotFoundError';
 
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, DocumentNotFound);
+      Error.captureStackTrace(this, DocumentNotFoundError);
     }
   }
 }

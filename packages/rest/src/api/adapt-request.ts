@@ -1,7 +1,7 @@
 import express from 'express';
-import { APIRequest, RequestMethod } from '@mdn-seed/core';
+import { CoreRequest, RequestMethod } from '@mdn-seed/core';
 
-export const adaptRequest = (req: express.Request): Readonly<APIRequest> => {
+export const adaptRequest = (req: express.Request): Readonly<CoreRequest> => {
   return Object.freeze({
     path: req.path,
     method: req.method as RequestMethod,

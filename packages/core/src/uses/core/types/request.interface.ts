@@ -7,7 +7,7 @@ export enum RequestMethod {
   HEAD = 'HEAD',
   OPTIONS = 'OPTIONS',
 }
-export interface APIRequest {
+export interface CoreRequest {
   path: string;
   method: RequestMethod;
   pathParams: any;

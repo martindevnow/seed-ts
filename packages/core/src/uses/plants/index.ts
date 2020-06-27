@@ -1,10 +1,12 @@
-import { makePlantService } from '@mdn-seed/core';
-import { makeInMemoryDb } from '@mdn-seed/db';
-import { makePlantsEndpointHandler } from './plants-endpoint';
 export * from './plants-endpoint';
+// import { makePlantsService } from '@mdn-seed/core';
+// import { makeInMemoryDb } from '@mdn-seed/db';
+// import { makePlantsEndpointHandler } from './plants-endpoint';
 
-const database = makeInMemoryDb();
-const plantsService = makePlantService({ database });
-export const plantsEndpointHandler = makePlantsEndpointHandler({
-  plantsService,
-});
+// Sample of setup
+
+// const database = makeInMemoryDb();
+// const plantsService = makePlantsService({ database });
+// export const plantsEndpointHandler = makePlantsEndpointHandler({
+//   plantsService,
+// });
