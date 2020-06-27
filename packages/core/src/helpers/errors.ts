@@ -53,3 +53,14 @@ export class DocumentNotFoundError extends Error {
     }
   }
 }
+
+export class EmptyObjectInitializationError extends Error {
+  constructor(model: string) {
+    super(`A "${model}" model was initialized with an empty object`);
+    this.name = 'EmptyObjectInitializationError';
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, EmptyObjectInitializationError);
+    }
+  }
+}

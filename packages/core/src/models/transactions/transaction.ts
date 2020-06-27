@@ -1,5 +1,5 @@
 import { IPlant } from '../plants/plant';
-import { IZone } from '../zone/zone';
+import { IZone } from '../zones/zone';
 
 export enum TransactionType {
   ChangePlantStatus = 'CHANGE_PLANT_STATUS', // req plant, date

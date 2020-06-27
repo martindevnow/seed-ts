@@ -1,4 +1,8 @@
 import sanitize from '../../helpers/sanitize';
+import {
+  RequiredParameterError,
+  EmptyObjectInitializationError,
+} from '../../helpers/errors';
 
 export enum Unit {
   Feet = 'FEET',
@@ -7,10 +11,10 @@ export enum Unit {
 
 export interface IZoneData {
   readonly name: string;
-  readonly length: string;
-  readonly width: string;
-  readonly height: string;
-  readonly units: Unit;
+  readonly length?: string;
+  readonly width?: string;
+  readonly height?: string;
+  readonly units?: Unit;
 }
 
 export interface IZone extends IZoneData {
@@ -26,20 +30,26 @@ export class Zone implements IZone {
   readonly units: Unit;
 
   constructor(zoneData: IZone) {
+    if (!zoneData) {
+      throw new EmptyObjectInitializationError('Plant');
+    }
     const validZone = this.validate(zoneData);
     const normalZone = this.normalize(validZone);
 
     const { id, name, length, width, height, units } = normalZone;
     this.id = id || '';
     this.name = name;
-    this.length = length;
-    this.width = width;
-    this.height = height;
-    this.units = units;
+    this.length = length || null;
+    this.width = width || null;
+    this.height = height || null;
+    this.units = units || null;
   }
 
   private validate(zoneData: IZone): IZone {
-    // TODO :: Validate Dimensions...
+    if (!zoneData.name) {
+      console.error(`Error: "name" is missing from zoneData`);
+      throw new RequiredParameterError('name');
+    }
     return zoneData;
   }
 
@@ -52,25 +62,6 @@ export class Zone implements IZone {
   }
 }
 
-export default function makeZone(zoneData: IZoneData): Zone {
+export const makeZone = (zoneData: IZoneData): Zone => {
   return new Zone(zoneData);
-
-  // if (!zoneData) {
-  //   requiredParam('zoneData');
-  // }
-  // const validZone = validate(zoneData);
-  // const normalZone = normalize(validZone);
-  // return Object.freeze(normalZone);
-
-  // function validate(zoneData: IZoneData) {
-  //   // TODO :: Validate Dimensions
-  //   return zoneData;
-  // }
-
-  // function normalize({ name, ...other }: IZoneData) {
-  //   return {
-  //     name: sanitize(name),
-  //     ...other,
-  //   };
-  // }
-}
+};

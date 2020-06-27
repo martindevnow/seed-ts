@@ -7,4 +7,15 @@ export interface Service<T, R> {
   // documentToObj: (item: T) => R;
 }
 
-// export interface PlantsService extends Service<IPlantData, Plant> {}
+// export interface PlantService extends Service<IPlantData, Plant> {}
+export interface ServiceError {
+  code: number;
+  message: string;
+  details?: any;
+}
+
+export enum ServiceErrors {
+  NotFound = 'NotFound',
+  Duplicate = 'Duplicate',
+  MissingData = 'MissingData',
+}

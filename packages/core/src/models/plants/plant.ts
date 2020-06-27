@@ -1,6 +1,7 @@
 import {
   InvalidPropertyError,
   RequiredParameterError,
+  EmptyObjectInitializationError,
 } from '../../helpers/errors';
 
 export enum PlantStatus {
@@ -42,7 +43,7 @@ export class Plant implements IPlant {
 
   constructor(plantData: IPlant) {
     if (!plantData) {
-      throw new Error('plantData undefined');
+      throw new EmptyObjectInitializationError('Plant');
     }
     console.log('new Plant() :: ', { plantData });
     const validPlant = this.validate(plantData);
@@ -52,10 +53,10 @@ export class Plant implements IPlant {
     this.id = id || '';
     this.type = type;
     this.status = status;
-    this.strain = strain || '';
-    this.name = name || '';
-    this.parent = parent || '';
-    this.zone = zone || '';
+    this.strain = strain || null;
+    this.name = name || null;
+    this.parent = parent || null;
+    this.zone = zone || null;
   }
 
   private validate(plantData: IPlant): IPlant {
@@ -82,7 +83,6 @@ export class Plant implements IPlant {
 }
 
 export const makePlant = (plantData: IPlantData): Plant => {
-  // console.log('plant.makePlant() :: ', { plantData });
   return new Plant(plantData);
 };
 

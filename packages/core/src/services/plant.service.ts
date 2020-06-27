@@ -2,19 +2,7 @@ import { IDatabase } from '@mdn-seed/db';
 import { IPlantData, makePlant, IPlant, Plant } from '../models/plants/plant';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
 
-interface ServiceError {
-  code: number;
-  message: string;
-  details?: any;
-}
-
-enum ServiceErrors {
-  NotFound = 'NotFound',
-  Duplicate = 'Duplicate',
-  MissingData = 'MissingData',
-}
-
-export const makePlantsService = ({ database }: { database: IDatabase }) => {
+export const makePlantService = ({ database }: { database: IDatabase }) => {
   return Object.freeze({
     create,
     update,

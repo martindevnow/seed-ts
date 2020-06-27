@@ -1,4 +1,4 @@
-import { Unit } from '../models/zone/zone';
+import { Unit } from '../models/zones/zone';
 import { IPlantData, Plant, PlantStatus } from '../models/plants/plant';
 
 export const MOCK_ZONE = {

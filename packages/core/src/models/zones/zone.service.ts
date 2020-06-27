@@ -1,5 +1,5 @@
 import { IDatabase } from '@mdn-seed/db';
-import makeZone, { IZoneData, IZone, Zone } from './zone';
+import { makeZone, IZoneData, IZone, Zone } from './zone';
 
 export default function makeZoneService({ database }: { database: IDatabase }) {
   return Object.freeze({
