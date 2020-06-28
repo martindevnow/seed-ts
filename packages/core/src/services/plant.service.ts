@@ -2,6 +2,7 @@ import { IDatabase } from '@mdn-seed/db';
 import { IPlantData, makePlant, IPlant, Plant } from '../models/plants/plant';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
 import { Service } from './service.interface';
+import QueryBuilder from '@mdn-seed/db/src/helpers/query-builder';
 
 export const makePlantService = ({
   database,
@@ -13,6 +14,7 @@ export const makePlantService = ({
     update,
     getAll,
     findById,
+    findBy,
     destroy,
   });
 
@@ -56,6 +58,13 @@ export const makePlantService = ({
     await database.collection('plants');
     const plant = await database.destroy(id);
     return !!plant;
+  }
+
+  async function findBy(property: string, value: any): Promise<Array<Plant>> {
+    await database.collection('plants');
+    // const qb = new QueryBuilder('plants').whereIs({ [property]: value });
+    const results = await database.where(property, '==', value);
+    return results.map(documentToObj);
   }
 
   function documentToObj(plant: IPlantData): Plant {

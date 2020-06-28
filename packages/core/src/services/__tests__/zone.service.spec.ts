@@ -1,5 +1,5 @@
-import makeZoneService from './zone.service';
-import { Unit, IZone, IZoneData, Zone } from './zone';
+import { makeZoneService } from '../zone.service';
+import { Unit, IZone, IZoneData, Zone } from '../../models/zones/zone';
 import { IDatabase, makeInMemoryDb } from '@mdn-seed/db';
 import { MOCK_ZONE } from '../../tests/helpers';
 

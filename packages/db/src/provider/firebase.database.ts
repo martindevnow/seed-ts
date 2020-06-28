@@ -5,6 +5,7 @@ import {
 } from '@mdn-seed/core/src/helpers/errors';
 import { IDatabase } from '../types/database.interface';
 import { FirebaseConfig } from '../types/firebase-config.interface';
+import QueryBuilder, { InstructionType } from '../helpers/query-builder';
 
 export default function makeFirebaseDatabase({
   config,
@@ -21,6 +22,7 @@ export default function makeFirebaseDatabase({
     list,
     destroy,
     update,
+    where,
   });
 
   async function collection(newCollection: string) {
@@ -64,9 +66,40 @@ export default function makeFirebaseDatabase({
   async function destroy(id: string) {
     try {
       await database.collection(currentCollection).doc(id).delete();
+      return true;
     } catch (error) {
       console.error('Error Deleting from Firestore :: ', { error });
       return Promise.reject(error);
     }
+  }
+
+  // TODO: Validate if something this complex is necessary
+  // async function query(qb: QueryBuilder) {
+  //   try {
+  //     qb.instructions.reduce((acc, curr) => {
+  //       switch (curr.type) {
+  //         case InstructionType.TABLE:
+  //           return database.collection(curr.name);
+  //         case InstructionType.WHERE:
+  //           const { field, operator, value } = curr;
+  //           return (database as any).where(field, operator, value);
+  //       }
+  //     }, database);
+  //     return (database as any).get();
+  //   } catch (error) {
+  //     console.error(`Error with Query`, { error });
+  //     return Promise.reject(error);
+  //   }
+  // }
+
+  // TODO: Alternatively, if the use-cases are minimal,
+  // then, it might be better to keep the database queries explicit as well
+  async function where(property: string, operator: any, value: any) {
+    return (
+      await database
+        .collection(currentCollection)
+        .where(property, operator, value)
+        .get()
+    ).docs.map((doc) => doc.data());
   }
 }

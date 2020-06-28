@@ -14,10 +14,10 @@ export const makeZoneService = ({
     getAll,
     findById,
     destroy,
+    findBy,
   });
 
   async function create(zoneData: IZoneData): Promise<Zone> {
-    // console.log('ZoneService.create() :: ', { zoneData });
     try {
       const zone: IZoneData = makeZone(zoneData);
       await database.collection('zones');
@@ -31,7 +31,7 @@ export const makeZoneService = ({
   async function getAll(): Promise<Zone[]> {
     await database.collection('zones');
     const results = await database.list();
-    return results.map((item: IZoneData) => documentToObj(item));
+    return results.map(documentToObj);
   }
 
   async function update(zoneData: IZone): Promise<Zone> {
@@ -52,6 +52,12 @@ export const makeZoneService = ({
     await database.collection('zones');
     const zone = await database.destroy(id);
     return !!zone;
+  }
+
+  async function findBy(property: string, value: any): Promise<Array<Zone>> {
+    await database.collection('zones');
+    const results = await database.where(property, '==', value);
+    return results.map(documentToObj);
   }
 
   function documentToObj(zone: IZoneData): Zone {

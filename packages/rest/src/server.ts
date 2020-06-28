@@ -23,7 +23,10 @@ const handlePlantsRequest = makePlantsEndpointHandler({
   plantService,
   zoneService,
 });
-const handleZonesRequest = makeZonesEndpointHandler({ zoneService });
+const handleZonesRequest = makeZonesEndpointHandler({
+  plantService,
+  zoneService,
+});
 
 const app = express();
 
@@ -33,6 +36,7 @@ app.all('/plants', plantsController);
 app.all('/plants/:id', plantsController);
 app.all('/zones', zonesController);
 app.all('/zones/:id', zonesController);
+app.all('/zones/:id/plants', zonesController);
 
 function plantsController(req: express.Request, res: express.Response) {
   const coreRequest: CoreRequest = adaptRequest(req);

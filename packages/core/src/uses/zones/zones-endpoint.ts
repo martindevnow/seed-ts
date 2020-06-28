@@ -1,17 +1,21 @@
-import { IZoneData, makeZone, IZone } from '../../models/zones/zone';
+import { IZoneData, makeZone, IZone, Zone } from '../../models/zones/zone';
 import { MethodNotSupportedError } from '../../helpers/errors';
 import { CoreRequest, RequestMethod } from '../core/types/request.interface';
 import { CoreResponse } from '../core/types/response.interface';
 import { handleServiceError } from '../core/helpers/handle-error';
 import { handleSuccess } from '../core/helpers/handle-success';
+import { Service } from '../../services/service.interface';
+import { IPlantData, Plant } from '../../models/plants/plant';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
 // Solidify the contracts. Less implicit any
 export const makeZonesEndpointHandler = ({
   zoneService,
+  plantService,
 }: {
-  zoneService: any;
+  zoneService: Service<IZoneData, Zone>;
+  plantService: Service<IPlantData, Plant>;
 }) => {
   return async function handle(
     coreRequest: CoreRequest
@@ -22,12 +26,21 @@ export const makeZonesEndpointHandler = ({
       method,
       pathParams: { id },
     } = coreRequest;
+
+    // TODO: Make a helper function for this that will sanitize and parse the path into something useful
+
+    const pathArr = path.split('/');
+
     console.log({ id, path });
     switch (coreRequest.method) {
       case RequestMethod.POST:
         return postZone(coreRequest);
       case RequestMethod.GET:
-        return id ? getZone(id) : getZones();
+        return id
+          ? pathArr[3] === 'plants'
+            ? getPlantsInZone(id)
+            : getZone(id)
+          : getZones();
       case RequestMethod.PATCH:
         return id
           ? updateZone(id, coreRequest)
@@ -51,6 +64,16 @@ export const makeZonesEndpointHandler = ({
     try {
       const zones = await zoneService.getAll();
       return handleSuccess(zones);
+    } catch (error) {
+      return Promise.reject(handleServiceError(error));
+    }
+  }
+
+  async function getPlantsInZone(id: string) {
+    console.log('getPlantsInZone');
+    try {
+      const plants = await plantService.findBy('zoneId', id);
+      return handleSuccess(plants);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }
