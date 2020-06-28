@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import {
+  makeDataPointService,
   makePlantService,
   makePlantsEndpointHandler,
   CoreResponse,
@@ -19,9 +20,11 @@ import { adaptError } from './api/helpers/adapt-error';
 const database = makeFirebaseDb({ config: firebaseConfig });
 const plantService = makePlantService({ database });
 const zoneService = makeZoneService({ database });
+const dataPointService = makeDataPointService({ database });
 const handlePlantsRequest = makePlantsEndpointHandler({
   plantService,
   zoneService,
+  dataPointService,
 });
 const handleZonesRequest = makeZonesEndpointHandler({
   plantService,
@@ -34,6 +37,7 @@ app.use(bodyParser.json());
 
 app.all('/plants', plantsController);
 app.all('/plants/:id', plantsController);
+app.all('/plants/:id/data', plantsController);
 app.all('/zones', zonesController);
 app.all('/zones/:id', zonesController);
 app.all('/zones/:id/plants', zonesController);

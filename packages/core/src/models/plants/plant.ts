@@ -26,6 +26,7 @@ export interface IPlantData {
   name?: string; // The name given to this particular plant
   parent?: string; // UUID of parent IF is a clone
   zoneId?: string; // UUID of the zone
+  dataPoints?: Array<string>;
 }
 
 export interface IPlant extends IPlantData {
@@ -40,16 +41,28 @@ export class Plant implements IPlant {
   readonly name?: string;
   readonly parent?: string;
   readonly zoneId?: string;
+  readonly dataPoints?: Array<string>;
 
   constructor(plantData: IPlant) {
+    console.log('constructor', { plantData });
     if (!plantData) {
       throw new EmptyObjectInitializationError('Plant');
     }
-    console.log('new Plant() :: ', { plantData });
     const validPlant = this.validate(plantData);
     const normalPlant = this.normalize(validPlant);
 
-    const { id, type, status, strain, name, parent, zoneId } = normalPlant;
+    const {
+      id,
+      type,
+      status,
+      strain,
+      name,
+      parent,
+      zoneId,
+      dataPoints,
+    } = normalPlant;
+    console.log({ normalPlant });
+
     this.id = id || '';
     this.type = type;
     this.status = status;
@@ -57,6 +70,7 @@ export class Plant implements IPlant {
     this.name = name || null;
     this.parent = parent || null;
     this.zoneId = zoneId || null;
+    this.dataPoints = dataPoints || [null];
   }
 
   private validate(plantData: IPlant): IPlant {

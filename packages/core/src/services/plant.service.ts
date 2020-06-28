@@ -2,7 +2,6 @@ import { IDatabase } from '@mdn-seed/db';
 import { IPlantData, makePlant, IPlant, Plant } from '../models/plants/plant';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
 import { Service } from './service.interface';
-import QueryBuilder from '@mdn-seed/db/src/helpers/query-builder';
 
 export const makePlantService = ({
   database,
@@ -37,15 +36,7 @@ export const makePlantService = ({
   async function getAll(): Promise<Plant[]> {
     await database.collection('plants');
     const results = await database.list();
-    return results.map((item: IPlantData) => documentToObj(item));
-  }
-
-  async function update(plantData: IPlant): Promise<Plant> {
-    await database.collection('plants');
-    const current = await database.findById(plantData.id);
-    const newPlant = makePlant({ ...current, ...plantData });
-    const result = await database.update(newPlant);
-    return documentToObj(result);
+    return results.map(documentToObj);
   }
 
   async function findById(id: string): Promise<Plant> {
@@ -54,17 +45,26 @@ export const makePlantService = ({
     return documentToObj(plantData);
   }
 
-  async function destroy(id: string): Promise<boolean> {
-    await database.collection('plants');
-    const plant = await database.destroy(id);
-    return !!plant;
-  }
-
   async function findBy(property: string, value: any): Promise<Array<Plant>> {
     await database.collection('plants');
     // const qb = new QueryBuilder('plants').whereIs({ [property]: value });
     const results = await database.where(property, '==', value);
     return results.map(documentToObj);
+  }
+
+  async function update(plantData: IPlant): Promise<Plant> {
+    await database.collection('plants');
+    console.log('in update', { plantData });
+    const current = await database.findById(plantData.id);
+    const newPlant = makePlant({ ...current, ...plantData });
+    const result = await database.update(newPlant);
+    return documentToObj(result);
+  }
+
+  async function destroy(id: string): Promise<boolean> {
+    await database.collection('plants');
+    const plant = await database.destroy(id);
+    return !!plant;
   }
 
   function documentToObj(plant: IPlantData): Plant {

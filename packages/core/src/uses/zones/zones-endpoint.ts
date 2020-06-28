@@ -20,15 +20,14 @@ export const makeZonesEndpointHandler = ({
   return async function handle(
     coreRequest: CoreRequest
   ): Promise<CoreResponse> {
-    console.log('ZonesEndpoint.handle() :: ', { coreRequest });
     const {
       path,
       method,
       pathParams: { id },
     } = coreRequest;
 
-    // TODO: Make a helper function for this that will sanitize and parse the path into something useful
-
+    // TODO: Make a helper function for this that will sanitize
+    // and parse the path into something useful
     const pathArr = path.split('/');
 
     console.log({ id, path });

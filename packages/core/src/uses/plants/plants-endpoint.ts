@@ -1,4 +1,9 @@
-import { IPlantData, makePlant, Plant } from '../../models/plants/plant';
+import {
+  IPlantData,
+  makePlant,
+  Plant,
+  PlantStatus,
+} from '../../models/plants/plant';
 import { MethodNotSupportedError } from '../../helpers/errors';
 import { CoreRequest, RequestMethod } from '../core/types/request.interface';
 import { CoreResponse } from '../core/types/response.interface';
@@ -7,6 +12,11 @@ import { handleSuccess } from '../core/helpers/handle-success';
 import { Service } from '../../services/service.interface';
 import { makeZoneService } from '../../services/zone.service';
 import { IZoneData, Zone } from '../../models/zones/zone';
+import {
+  makeDataPoint,
+  IDataPointData,
+  DataPoint,
+} from '../../models/data-point/data-point';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
@@ -14,9 +24,11 @@ import { IZoneData, Zone } from '../../models/zones/zone';
 export const makePlantsEndpointHandler = ({
   plantService,
   zoneService,
+  dataPointService,
 }: {
   plantService: Service<IPlantData, Plant>;
   zoneService: Service<IZoneData, Zone>;
+  dataPointService: Service<IDataPointData, DataPoint>;
 }) => {
   return async function handle(
     coreRequest: CoreRequest
@@ -27,10 +39,12 @@ export const makePlantsEndpointHandler = ({
       method,
       pathParams: { id },
     } = coreRequest;
-    console.log({ id, path });
+    const pathArr = path.split('/');
     switch (coreRequest.method) {
       case RequestMethod.POST:
-        return postPlant(coreRequest);
+        return id && pathArr[3] === 'data'
+          ? postPlantDataPoint(id, coreRequest)
+          : postPlant(coreRequest);
       case RequestMethod.GET:
         return id ? getPlant(id) : getPlants();
       case RequestMethod.PATCH:
@@ -70,6 +84,27 @@ export const makePlantsEndpointHandler = ({
       const createdPlant = await plantService.create(plant);
       return handleSuccess(createdPlant);
     } catch (error) {
+      return Promise.reject(handleServiceError(error));
+    }
+  }
+
+  async function postPlantDataPoint(plantId: string, coreRequest: CoreRequest) {
+    try {
+      console.log('in postPlantDataPoint', { coreRequest });
+      const plant: Plant = await plantService.findById(plantId);
+      const dataPoint = makeDataPoint(coreRequest.body as IDataPointData);
+      const result = await dataPointService.create(dataPoint);
+      const dataPoints = plant.dataPoints.filter((dp) => !!dp);
+      dataPoints.push(result.id);
+      const newPlantData = {
+        ...plant,
+        dataPoints,
+      };
+      const newPlant = makePlant(newPlantData);
+      await plantService.update(newPlant);
+      return handleSuccess(result);
+    } catch (error) {
+      // TODO: If the plant doesn't exist, the dataPoint should be deleted...
       return Promise.reject(handleServiceError(error));
     }
   }
