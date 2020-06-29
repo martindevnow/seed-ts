@@ -26,7 +26,7 @@ export interface IPlantData {
   name?: string; // The name given to this particular plant
   parent?: string; // UUID of parent IF is a clone
   zoneId?: string; // UUID of the zone
-  dataPoints?: Array<string>;
+  dataPoints?: Array<any>;
 }
 
 export interface IPlant extends IPlantData {
@@ -41,7 +41,7 @@ export class Plant implements IPlant {
   readonly name?: string;
   readonly parent?: string;
   readonly zoneId?: string;
-  readonly dataPoints?: Array<string>;
+  readonly dataPoints?: Array<any>;
 
   constructor(plantData: IPlant) {
     console.log('constructor', { plantData });
@@ -70,7 +70,7 @@ export class Plant implements IPlant {
     this.name = name || null;
     this.parent = parent || null;
     this.zoneId = zoneId || null;
-    this.dataPoints = dataPoints || [null];
+    this.dataPoints = dataPoints || [];
   }
 
   private validate(plantData: IPlant): IPlant {

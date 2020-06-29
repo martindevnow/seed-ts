@@ -90,15 +90,19 @@ export const makePlantsEndpointHandler = ({
 
   async function postPlantDataPoint(plantId: string, coreRequest: CoreRequest) {
     try {
-      console.log('in postPlantDataPoint', { coreRequest });
       const plant: Plant = await plantService.findById(plantId);
-      const dataPoint = makeDataPoint(coreRequest.body as IDataPointData);
+      const dataPoint = makeDataPoint({
+        ...coreRequest.body,
+        plantId: plant.id,
+      });
       const result = await dataPointService.create(dataPoint);
-      const dataPoints = plant.dataPoints.filter((dp) => !!dp);
-      dataPoints.push(result.id);
+      // TODO: Enhance this function so that the Plant has an array of the latest DataPoints
+      // It should store the latest for this Plant on the plant
+      const plantsDataPoints = plant.dataPoints.filter((dp) => !!dp);
+      plantsDataPoints.push(result.id);
       const newPlantData = {
         ...plant,
-        dataPoints,
+        dataPoints: plantsDataPoints,
       };
       const newPlant = makePlant(newPlantData);
       await plantService.update(newPlant);

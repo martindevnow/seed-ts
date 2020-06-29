@@ -19,6 +19,8 @@ export interface IDataPointData {
   timestamp: any; // TODO: Get a better type for tracking time/date
   dataValue: any;
   dataUnit: any; // TODO: Better type here required
+  plantId?: string;
+  zoneId?: string;
 }
 
 export interface IDataPoint extends IDataPointData {
@@ -31,6 +33,8 @@ export class DataPoint implements IDataPoint {
   readonly timestamp;
   readonly dataValue;
   readonly dataUnit;
+  readonly plantId;
+  readonly zoneId;
 
   constructor(dataPoint: IDataPoint) {
     if (!dataPoint) {
@@ -40,12 +44,22 @@ export class DataPoint implements IDataPoint {
     const validDataPoint = this.validate(dataPoint);
     const normalDataPoint = this.normalize(validDataPoint);
 
-    const { id, type, timestamp, dataValue, dataUnit } = normalDataPoint;
+    const {
+      id,
+      type,
+      timestamp,
+      dataValue,
+      dataUnit,
+      plantId,
+      zoneId,
+    } = normalDataPoint;
     this.id = id || '';
     this.type = type;
     this.timestamp = timestamp;
     this.dataValue = dataValue;
     this.dataUnit = dataUnit;
+    this.plantId = plantId || null;
+    this.zoneId = zoneId || null;
   }
 
   private validate(dataPoint: IDataPoint): IDataPoint {

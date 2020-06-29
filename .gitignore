@@ -19,3 +19,7 @@
 
 ## Yarn Error Log
 yarn-error.log
+
+# Local Environment Variables
+.env
+.env.*

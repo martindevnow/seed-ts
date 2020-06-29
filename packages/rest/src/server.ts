@@ -29,6 +29,7 @@ const handlePlantsRequest = makePlantsEndpointHandler({
 const handleZonesRequest = makeZonesEndpointHandler({
   plantService,
   zoneService,
+  dataPointService,
 });
 
 const app = express();
@@ -41,6 +42,7 @@ app.all('/plants/:id/data', plantsController);
 app.all('/zones', zonesController);
 app.all('/zones/:id', zonesController);
 app.all('/zones/:id/plants', zonesController);
+app.all('/zones/:id/data', zonesController);
 
 function plantsController(req: express.Request, res: express.Response) {
   const coreRequest: CoreRequest = adaptRequest(req);
