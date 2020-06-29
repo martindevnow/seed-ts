@@ -11,11 +11,16 @@ import {
   makeZonesEndpointHandler,
 } from '@mdn-seed/core';
 import { makeFirebaseDb } from '@mdn-seed/db';
-
-import { firebaseConfig } from './db/firebase';
 import { adaptRequest } from './api/helpers/adapt-request';
 import { adaptResponse } from './api/helpers/adapt-response';
 import { adaptError } from './api/helpers/adapt-error';
+
+import { config } from 'dotenv';
+import { resolve } from 'path';
+
+// Environment Configuration
+config({ path: resolve(__dirname, '../../../.env') });
+import { firebaseConfig } from './db/firebase';
 
 const database = makeFirebaseDb({ config: firebaseConfig });
 const plantService = makePlantService({ database });

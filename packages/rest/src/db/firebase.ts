@@ -1,8 +1,4 @@
 import { FirebaseConfig } from '@mdn-seed/db';
-import { config } from 'dotenv';
-import { resolve } from 'path';
-
-config({ path: resolve(__dirname, '../../../../.env') });
 
 export const firebaseConfig: FirebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
