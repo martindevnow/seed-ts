@@ -2,6 +2,7 @@ import * as firebase from 'firebase';
 import {
   DocumentNotFoundError,
   UniqueConstraintError,
+  RequiredParameterError,
 } from '@mdn-seed/core/src/helpers/errors';
 import { IDatabase } from '../types/database.interface';
 import { FirebaseConfig } from '../types/firebase-config.interface';
@@ -29,7 +30,10 @@ export default function makeFirebaseDatabase({
     currentCollection = newCollection;
   }
 
-  async function findById(id: string) {
+  async function findById(id?: string) {
+    if (!id) {
+      return Promise.reject(new RequiredParameterError('id'));
+    }
     const doc = await database.collection(currentCollection).doc(id).get();
     if (!doc.exists) {
       throw new DocumentNotFoundError(id);

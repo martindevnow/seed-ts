@@ -25,10 +25,10 @@ export interface IZone extends IZoneData {
 export class Zone implements IZone {
   id: string;
   readonly name: string;
-  readonly length: string;
-  readonly width: string;
-  readonly height: string;
-  readonly units: Unit;
+  readonly length?: string;
+  readonly width?: string;
+  readonly height?: string;
+  readonly units?: Unit;
   readonly dataPoints: Array<any>;
 
   constructor(zoneData: IZone) {
@@ -41,10 +41,10 @@ export class Zone implements IZone {
     const { id, name, length, width, height, units, dataPoints } = normalZone;
     this.id = id || '';
     this.name = name;
-    this.length = length || null;
-    this.width = width || null;
-    this.height = height || null;
-    this.units = units || null;
+    this.length = length;
+    this.width = width;
+    this.height = height;
+    this.units = units;
     this.dataPoints = dataPoints || [];
   }
 

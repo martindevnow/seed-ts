@@ -2,6 +2,7 @@ import { IDatabase } from '@mdn-seed/db';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
 import { IZoneData, makeZone, IZone, Zone } from '../models/zones/zone';
 import { Service } from './service.interface';
+import { RequiredParameterError } from '../helpers/errors';
 
 export const makeZoneService = ({
   database,
@@ -13,8 +14,8 @@ export const makeZoneService = ({
     update,
     getAll,
     findById,
-    destroy,
     findBy,
+    destroy,
   });
 
   async function create(zoneData: IZoneData): Promise<Zone> {
