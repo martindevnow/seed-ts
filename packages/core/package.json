@@ -1,0 +1,13 @@
+{
+  "name": "@mdn-seed/core",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@mdn-seed/db": "1.0.0",
+    "typescript": "^3.9.2"
+  },
+  "devDependencies": {
+    "ts-node": "^8.10.2"
+  },
+  "scripts": {}
+}
