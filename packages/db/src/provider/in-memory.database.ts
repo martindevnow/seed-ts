@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { IDatabase } from '../types/database.interface';
+import { RequiredParameterError } from '@mdn-seed/core/src/helpers/errors';
 
 const propertyIsEqual = (
   obj: { [key: string]: any },
@@ -24,7 +25,10 @@ export default function makeInMemoryDb(): IDatabase {
       }
       maps[currentMap] = new Map();
     },
-    findById: async (id: string) => {
+    findById: async (id?: string) => {
+      if (!id) {
+        return Promise.reject(new RequiredParameterError('id'));
+      }
       const obj = maps[currentMap].get(id);
       return { ...maps[currentMap].get(id), id };
     },
