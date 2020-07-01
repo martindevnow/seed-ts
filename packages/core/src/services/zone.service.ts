@@ -43,13 +43,13 @@ export const makeZoneService = ({
     return documentToObj(result);
   }
 
-  async function findById(id: string): Promise<IZone> {
+  async function findById(id?: string): Promise<IZone> {
     await database.collection('zones');
     const zoneData = await database.findById(id);
     return documentToObj(zoneData);
   }
 
-  async function destroy(id: string): Promise<boolean> {
+  async function destroy(id?: string): Promise<boolean> {
     await database.collection('zones');
     const zone = await database.destroy(id);
     return !!zone;

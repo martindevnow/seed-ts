@@ -9,7 +9,7 @@ export interface IDatabase {
   findById: (id?: string) => Promise<any>;
   insert: (item: any) => Promise<any>;
   list: () => Promise<Array<any>>;
-  destroy: (id: string) => Promise<boolean>;
+  destroy: (id?: string) => Promise<boolean>;
   update: (item: any) => Promise<any>;
   where: (property: string, operator: any, value: any) => Promise<Array<any>>;
   collection(table: string): void;

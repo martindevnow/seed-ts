@@ -67,8 +67,11 @@ export default function makeFirebaseDatabase({
     return { ...updated, id: docRef.id };
   }
 
-  async function destroy(id: string) {
+  async function destroy(id?: string) {
     try {
+      if (!id) {
+        return Promise.reject(new RequiredParameterError('id'));
+      }
       await database.collection(currentCollection).doc(id).delete();
       return true;
     } catch (error) {

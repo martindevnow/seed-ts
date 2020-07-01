@@ -43,7 +43,12 @@ export default function makeInMemoryDb(): IDatabase {
         return { ...item, id };
       });
     },
-    destroy: async (id: string) => maps[currentMap].delete(id),
+    destroy: async (id?: string) => {
+      if (!id) {
+        return Promise.reject(new RequiredParameterError('id'));
+      }
+      return maps[currentMap].delete(id);
+    },
     update: async (item: any) => {
       if (!maps[currentMap].has(item.id)) {
         throw new Error('No such item');

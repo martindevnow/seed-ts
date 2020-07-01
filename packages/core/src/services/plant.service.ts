@@ -39,7 +39,7 @@ export const makePlantService = ({
     return results.map(documentToObj);
   }
 
-  async function findById(id: string): Promise<IPlant> {
+  async function findById(id?: string): Promise<IPlant> {
     await database.collection('plants');
     const plantData = await database.findById(id);
     return documentToObj(plantData);
@@ -52,7 +52,7 @@ export const makePlantService = ({
     return results.map(documentToObj);
   }
 
-  async function update(plantData: IPlant): Promise<IPlant> {
+  async function update(plantData: Partial<IPlant>): Promise<IPlant> {
     await database.collection('plants');
     console.log('in update', { plantData });
     const current = await database.findById(plantData.id);
@@ -61,7 +61,7 @@ export const makePlantService = ({
     return documentToObj(result);
   }
 
-  async function destroy(id: string): Promise<boolean> {
+  async function destroy(id?: string): Promise<boolean> {
     await database.collection('plants');
     const plant = await database.destroy(id);
     return !!plant;
