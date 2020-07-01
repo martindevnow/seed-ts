@@ -1,5 +1,5 @@
 import { makeZoneService } from '../zone.service';
-import { Unit, IZone, IZoneData, Zone } from '../../models/zones/zone';
+import { Unit, IZone, IZoneData } from '../../models/zones/zone';
 import { IDatabase, makeInMemoryDb } from '@mdn-seed/db';
 import { MOCK_ZONE } from '../../tests/helpers';
 
@@ -11,7 +11,7 @@ describe('Model: Zone', () => {
 
   it('creates a zone', async () => {
     const zoneService = makeZoneService({ database });
-    const actual: Zone = await zoneService.create(MOCK_ZONE);
+    const actual: IZone = await zoneService.create(MOCK_ZONE);
     expect(actual.id).not.toBeUndefined();
     expect(actual.id).toBeTruthy();
     const expected = await zoneService.findById(actual.id);
@@ -26,8 +26,8 @@ describe('Model: Zone', () => {
       width: '4',
       height: '6',
     };
-    const { id: id1 }: Zone = await zoneService.create(MOCK_ZONE);
-    const { id: id2 }: Zone = await zoneService.create(mockZone2);
+    const { id: id1 }: IZone = await zoneService.create(MOCK_ZONE);
+    const { id: id2 }: IZone = await zoneService.create(mockZone2);
 
     const actual1 = await zoneService.findById(id1);
     const actual2 = await zoneService.findById(id2);
@@ -63,8 +63,8 @@ describe('Model: Zone', () => {
       width: '4',
       height: '6',
     };
-    const { id: id1 }: Zone = await zoneService.create(MOCK_ZONE);
-    const { id: id2 }: Zone = await zoneService.create(mockZone2);
+    const { id: id1 }: IZone = await zoneService.create(MOCK_ZONE);
+    const { id: id2 }: IZone = await zoneService.create(mockZone2);
 
     const actual = await zoneService.getAll();
     expect(actual.length).toBe(2);

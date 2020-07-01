@@ -1,5 +1,5 @@
 import { IDatabase } from '@mdn-seed/db';
-import { IPlantData, makePlant, IPlant, Plant } from '../models/plants/plant';
+import { IPlantData, makePlant, IPlant } from '../models/plants/plant';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
 import { Service } from './service.interface';
 
@@ -7,7 +7,7 @@ export const makePlantService = ({
   database,
 }: {
   database: IDatabase;
-}): Service<IPlantData, Plant> => {
+}): Service<IPlantData, IPlant> => {
   return Object.freeze({
     create,
     update,
@@ -17,7 +17,7 @@ export const makePlantService = ({
     destroy,
   });
 
-  async function create(plantData: IPlantData): Promise<Plant> {
+  async function create(plantData: IPlantData): Promise<IPlant> {
     // TODO: Determine if this is worth it to wrap this layer in try catch block
     // How does the consumer want the error to be formatted?
     // Who should expect the thrown error?
@@ -33,26 +33,26 @@ export const makePlantService = ({
     }
   }
 
-  async function getAll(): Promise<Plant[]> {
+  async function getAll(): Promise<IPlant[]> {
     await database.collection('plants');
     const results = await database.list();
     return results.map(documentToObj);
   }
 
-  async function findById(id: string): Promise<Plant> {
+  async function findById(id: string): Promise<IPlant> {
     await database.collection('plants');
     const plantData = await database.findById(id);
     return documentToObj(plantData);
   }
 
-  async function findBy(property: string, value: any): Promise<Array<Plant>> {
+  async function findBy(property: string, value: any): Promise<Array<IPlant>> {
     await database.collection('plants');
     // const qb = new QueryBuilder('plants').whereIs({ [property]: value });
     const results = await database.where(property, '==', value);
     return results.map(documentToObj);
   }
 
-  async function update(plantData: IPlant): Promise<Plant> {
+  async function update(plantData: IPlant): Promise<IPlant> {
     await database.collection('plants');
     console.log('in update', { plantData });
     const current = await database.findById(plantData.id);
@@ -67,7 +67,7 @@ export const makePlantService = ({
     return !!plant;
   }
 
-  function documentToObj(plant: IPlantData): Plant {
+  function documentToObj(plant: IPlantData): IPlant {
     return makePlant(plant);
   }
 };

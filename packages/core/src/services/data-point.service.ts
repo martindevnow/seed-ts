@@ -1,8 +1,7 @@
 import {
-  DataPoint,
+  IDataPoint,
   IDataPointData,
   makeDataPoint,
-  IDataPoint,
 } from '../models/data-point/data-point';
 import { IDatabase } from '@mdn-seed/db';
 import { Service } from './service.interface';
@@ -12,7 +11,7 @@ export const makeDataPointService = ({
   database,
 }: {
   database: IDatabase;
-}): Service<IDataPointData, DataPoint> => {
+}): Service<IDataPointData, IDataPoint> => {
   return Object.freeze({
     create,
     update,
@@ -22,9 +21,9 @@ export const makeDataPointService = ({
     destroy,
   });
 
-  async function create(dataPointData: IDataPointData): Promise<DataPoint> {
+  async function create(dataPointData: IDataPointData): Promise<IDataPoint> {
     try {
-      const dataPoint: DataPoint = makeDataPoint(dataPointData);
+      const dataPoint: IDataPoint = makeDataPoint(dataPointData);
       await database.collection('data-points');
       const result: IDataPoint = await database.insert(dataPoint);
       return documentToObj(result);
@@ -33,13 +32,13 @@ export const makeDataPointService = ({
     }
   }
 
-  async function getAll(): Promise<DataPoint[]> {
+  async function getAll(): Promise<IDataPoint[]> {
     await database.collection('data-points');
     const results = await database.list();
     return results.map(documentToObj);
   }
 
-  async function findById(id: string): Promise<DataPoint> {
+  async function findById(id: string): Promise<IDataPoint> {
     await database.collection('data-points');
     const dataPoint = await database.findById(id);
     return documentToObj(dataPoint);
@@ -48,13 +47,15 @@ export const makeDataPointService = ({
   async function findBy(
     property: string,
     value: any
-  ): Promise<Array<DataPoint>> {
+  ): Promise<Array<IDataPoint>> {
     await database.collection('data-points');
     const results = await database.where(property, '==', value);
     return results.map(documentToObj);
   }
 
-  async function update(dataPointData: IDataPoint): Promise<DataPoint> {
+  async function update(
+    dataPointData: Partial<IDataPoint>
+  ): Promise<IDataPoint> {
     await database.collection('data-points');
     const current = await database.findById(dataPointData.id);
     const newDataPoint = makeDataPoint({ ...current, dataPointData });
@@ -68,7 +69,7 @@ export const makeDataPointService = ({
     return !!dataPoint;
   }
 
-  function documentToObj(dataPoint: IDataPointData): DataPoint {
+  function documentToObj(dataPoint: IDataPointData): IDataPoint {
     return makeDataPoint(dataPoint);
   }
 };
