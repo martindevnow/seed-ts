@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8ad412f4-9f91-48e5-b74c-ed075b9dc7a3",
+		"_postman_id": "00354503-e39d-4e3e-a5df-09769c90491a",
 		"name": "Seed",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,9 +14,11 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0b3e7ed6-e8fd-4838-8d3c-7f4862e5ae26",
+								"id": "c324ddf6-849a-4e46-8328-4c7ee09e92f3",
 								"exec": [
-									""
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -44,9 +46,9 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c8b20c08-6c65-4a98-8a45-3efe789f645b",
+								"id": "99dc1a7c-3d31-41a2-af13-40b34cd6ad6f",
 								"exec": [
-									"pm.test(\"Fail POST Plant with Invalid Zone ID\", function () {\r",
+									"pm.test(\"Fail POST Plant with Invalid Zone ID (404)\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([404]);\r",
 									"});\r",
 									""
@@ -86,7 +88,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "068386c1-9e23-448c-be47-1412b88cfaf1",
+								"id": "a608aada-4391-4249-8d7e-cbbef6b97eb6",
 								"exec": [
 									"pm.test(\"Fail POST Plant with no Status\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
@@ -128,7 +130,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "856e72a4-cd97-4171-8259-e33ffa422025",
+								"id": "3acc1ff0-3c0f-4699-b92a-78e1283e94de",
 								"exec": [
 									"pm.test(\"Successfully POST Plant\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
@@ -171,7 +173,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c6896706-ea73-4b96-be9d-b387de51a727",
+								"id": "ef7b66b5-f7c7-4d93-9f8c-39521e6b3f94",
 								"exec": [
 									"pm.test(\"Successfully POST DataPoint to a Plant\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
@@ -211,6 +213,20 @@
 				},
 				{
 					"name": "Update Plant ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8d20fb20-8b24-42fe-b63a-e1126190b48d",
+								"exec": [
+									"pm.test(\"Invalid PlantStatus => Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PATCH",
 						"header": [],
@@ -239,6 +255,20 @@
 				},
 				{
 					"name": "Update Plant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0a996b2b-6162-4e4a-847e-061c91332681",
+								"exec": [
+									"pm.test(\"Successful PATCH request\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PATCH",
 						"header": [],
@@ -267,6 +297,20 @@
 				},
 				{
 					"name": "Get a Single Plant ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0e7f7ea9-ab2a-4230-9354-f18dfc44b1ab",
+								"exec": [
+									"pm.test(\"Invalid PlantId => Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -286,6 +330,20 @@
 				},
 				{
 					"name": "Get a Single Plant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3fc36690-3415-43a3-89c8-3cd9a52d5a6c",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -305,18 +363,32 @@
 				},
 				{
 					"name": "Delete Plant ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8deace33-2c37-4f5b-b61e-cb690cb370fc",
+								"exec": [
+									"pm.test(\"Invalid PlantId => Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:9000/plants/nsy86VOloP9K9sswJFJS",
+							"raw": "localhost:9000/plants/INVALID_ID",
 							"host": [
 								"localhost"
 							],
 							"port": "9000",
 							"path": [
 								"plants",
-								"nsy86VOloP9K9sswJFJS"
+								"INVALID_ID"
 							]
 						}
 					},
@@ -324,6 +396,20 @@
 				},
 				{
 					"name": "Delete Plant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2dd83981-e032-4e57-98ad-bda698b8920d",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -467,7 +553,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "b9b6cc84-d054-4665-808b-ea8919c57ce3",
+								"id": "13e6b6d5-5418-41f9-bac2-f7a8c117575a",
 								"exec": [
 									"var jsonData = pm.response.json();\r",
 									"pm.globals.set(\"variable_key\", jsonData.id);"

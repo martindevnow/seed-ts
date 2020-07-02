@@ -8,7 +8,6 @@ export interface Service<T, R> {
   // documentToObj: (item: T) => R;
 }
 
-// export interface PlantService extends Service<IPlantData, Plant> {}
 export interface ServiceError {
   code: number;
   message: string;

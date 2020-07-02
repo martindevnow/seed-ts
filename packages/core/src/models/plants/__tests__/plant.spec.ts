@@ -1,6 +1,6 @@
 import { makePlant, IPlantData, PlantStatus } from '../plant';
 
-describe('Plant', () => {
+describe('Model: Plant', () => {
   it('HAPPY: has a minimum set of params that must be present', () => {
     const reqData = {
       type: 'Tom',

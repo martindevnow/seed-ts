@@ -3,7 +3,6 @@ import {
   RequiredParameterError,
   EmptyObjectInitializationError,
 } from '../../helpers/errors';
-import { accessSync } from 'fs';
 
 export enum PlantStatus {
   Seed = 'SEED',
@@ -34,66 +33,24 @@ export interface IPlant extends IPlantData {
   id?: string;
 }
 
-export class Plant implements IPlant {
-  id: string;
-  readonly type: string;
-  readonly status: PlantStatus;
-  readonly strain?: string;
-  readonly name?: string;
-  readonly parent?: string;
-  readonly zoneId?: string;
-  readonly dataPoints: Array<any>;
+type PlantProperty = keyof IPlant;
 
-  constructor(plantData: IPlant) {
-    console.log('constructor', { plantData });
-    if (!plantData) {
-      throw new EmptyObjectInitializationError('Plant');
-    }
-    const validPlant = this.validate(plantData);
-    const normalPlant = this.normalize(validPlant);
-    console.log({ normalPlant });
-    const {
-      id,
-      type,
-      status,
-      strain,
-      name,
-      parent,
-      zoneId,
-      dataPoints,
-    } = normalPlant;
-
-    this.id = id || '';
-    this.type = type;
-    this.status = status;
-
-    if (name) this.name = name;
-    if (strain) this.strain = strain;
-    if (parent) this.parent = parent;
-    if (zoneId) this.zoneId = zoneId;
-
-    this.dataPoints = dataPoints || [];
+export const makePlant = (plantData: IPlant): Readonly<IPlant> => {
+  if (!plantData) {
+    throw new EmptyObjectInitializationError('IPlant');
   }
 
-  // private purge(plantData: IPlant): IPlant {
-  //   const plantProperties = Object.getOwnPropertyNames(this);
-  //   console.log({ plantProperties });
-  //   const dataKeys = Object.keys(plantData);
-  //   console.log({ dataKeys });
-  //   // const cleanData: IPlant = dataKeys.reduce((acc, curr) => {
-  //   //   if (plantProperties.includes(curr)) {
-  //   //     return { ...acc, [curr]: plantData[curr] };
-  //   //   }
-  //   // }, {}) as IPlant;
-  //   return plantData;
-  // }
+  const validPlant = validate(plantData);
+  const normalPlant = normalize(validPlant);
 
-  private validate(plantData: IPlant): IPlant {
+  return Object.freeze(normalPlant);
+
+  function validate(plantData: IPlant): IPlant {
     if (!plantData.status) {
       console.error('ERROR no status :: ', { plantData });
       throw new RequiredParameterError('status');
     }
-    if (!this.isStatusValid(plantData.status)) {
+    if (!isStatusValid(plantData.status)) {
       console.error('ERROR invalid status :: ', { plantData });
       throw new InvalidPropertyError(
         `"${plantData.status}" is not a valid PlantStatus`
@@ -102,27 +59,39 @@ export class Plant implements IPlant {
     return plantData;
   }
 
-  private normalize(plantData: IPlant): IPlant {
-    return plantData;
+  function normalize(plantData: IPlant): IPlant {
+    const {
+      id = '',
+      type,
+      status,
+      strain,
+      name,
+      parent,
+      zoneId,
+      dataPoints = [],
+    } = plantData;
+    const onlyValidFields = {
+      id,
+      type,
+      status,
+      strain,
+      name,
+      parent,
+      zoneId,
+      dataPoints,
+    };
+
+    Object.keys(onlyValidFields).forEach((field: string) => {
+      if (onlyValidFields[field as PlantProperty] === undefined) {
+        delete onlyValidFields[field as PlantProperty];
+      }
+    });
+    return onlyValidFields;
   }
 
-  private isStatusValid(status: PlantStatus) {
+  function isStatusValid(status: PlantStatus) {
     return !!Object.values(PlantStatus).includes(status);
   }
-}
-
-export const makePlant = (plantData: IPlant): Plant => {
-  const {
-    id,
-    type,
-    status,
-    strain,
-    name,
-    parent,
-    zoneId,
-    dataPoints,
-  } = plantData;
-  return new Plant(plantData);
 };
 
 enum StatusUpdateType {}

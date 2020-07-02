@@ -5,7 +5,7 @@ import { CoreResponse } from '../core/types/response.interface';
 import { handleServiceError } from '../core/helpers/handle-error';
 import { handleSuccess } from '../core/helpers/handle-success';
 import { Service } from '../../services/service.interface';
-import { IPlantData, IPlant, Plant } from '../../models/plants/plant';
+import { IPlantData, IPlant } from '../../models/plants/plant';
 import {
   makeDataPoint,
   IDataPointData,

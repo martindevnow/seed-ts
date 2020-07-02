@@ -2,7 +2,6 @@ import {
   IPlantData,
   IPlant,
   makePlant,
-  Plant,
   PlantStatus,
 } from '../../models/plants/plant';
 import { MethodNotSupportedError } from '../../helpers/errors';
@@ -77,7 +76,7 @@ export const makePlantsEndpointHandler = ({
 
   async function postPlant(coreRequest: CoreRequest) {
     try {
-      const plant: Plant = makePlant(coreRequest.body as IPlantData);
+      const plant: IPlant = makePlant(coreRequest.body as IPlantData);
       if (plant.zoneId) {
         await zoneService.findById(plant.zoneId);
       }

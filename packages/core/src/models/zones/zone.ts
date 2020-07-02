@@ -33,7 +33,7 @@ export class Zone implements IZone {
 
   constructor(zoneData: IZone) {
     if (!zoneData) {
-      throw new EmptyObjectInitializationError('Plant');
+      throw new EmptyObjectInitializationError('IPlant');
     }
     const validZone = this.validate(zoneData);
     const normalZone = this.normalize(validZone);
