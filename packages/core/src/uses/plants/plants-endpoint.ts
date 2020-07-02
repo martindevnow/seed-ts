@@ -83,7 +83,7 @@ export const makePlantsEndpointHandler = ({
         await zoneService.findById(plant.zoneId);
       }
       const createdPlant = await plantService.create(plant);
-      return handleSuccess(createdPlant);
+      return handleSuccess(createdPlant, 201);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }
@@ -107,7 +107,7 @@ export const makePlantsEndpointHandler = ({
       };
       const newPlant = makePlant(newPlantData);
       await plantService.update(newPlant);
-      return handleSuccess(result);
+      return handleSuccess(result, 201);
     } catch (error) {
       // TODO: If the plant doesn't exist, the dataPoint should be deleted...
       return Promise.reject(handleServiceError(error));

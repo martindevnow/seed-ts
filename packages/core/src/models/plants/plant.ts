@@ -66,10 +66,10 @@ export class Plant implements IPlant {
     this.id = id || '';
     this.type = type;
     this.status = status;
-    this.strain = strain || undefined;
-    this.name = name || undefined;
-    this.parent = parent || undefined;
-    this.zoneId = zoneId || undefined;
+    this.strain = strain || null;
+    this.name = name || null;
+    this.parent = parent || null;
+    this.zoneId = zoneId || null;
     this.dataPoints = dataPoints || [];
   }
 
