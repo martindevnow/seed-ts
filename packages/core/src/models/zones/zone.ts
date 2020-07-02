@@ -48,7 +48,7 @@ export const makeZone = (zoneData: IZoneData): Readonly<IZone> => {
 
   function normalize(zoneData: IZone): IZone {
     const {
-      id = '',
+      id,
       name,
       length,
       width,

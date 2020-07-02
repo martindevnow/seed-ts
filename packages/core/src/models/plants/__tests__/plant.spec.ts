@@ -10,7 +10,6 @@ describe('Model: Plant', () => {
     const actualPlant = makePlant(reqData as any);
     expect(actualPlant).toEqual({
       ...reqData,
-      id: '',
       dataPoints: [],
     });
   });
@@ -27,7 +26,6 @@ describe('Model: Plant', () => {
     delete reqData.injected;
     expect(actual).toEqual({
       ...reqData,
-      id: '',
       dataPoints: [],
     });
   });

@@ -61,7 +61,7 @@ export const makePlant = (plantData: IPlant): Readonly<IPlant> => {
 
   function normalize(plantData: IPlant): IPlant {
     const {
-      id = '',
+      id,
       type,
       status,
       strain,
