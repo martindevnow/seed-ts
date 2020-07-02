@@ -1,15 +1,21 @@
 # Seed-TS
 
-Decided to restart this project just starting with the business case. The goal is to stop thinking about what the UI is going to be like, and instead focus on the use cases.
+Based in Typescript, this mono-repo covers the project for managing your home garden and tracking your results! This project uses yarn workspaces to manage the independent modules.
 
-## Build
-`yarn build`
+This application is broken down into several key components.
 
-## Run
-`yarn start`
+- `@mdn-seed/core` manages all of the business logic and use cases via the exposed endpoints. When consuming this, you need to instantiate the services with a database connection that matches the `IDatabase` interface from `@mdn-seed/db`.
+- `@mdn-seed/db` manages the interfaces that the `@mdn-seed/core` packages rely on. This module also contains several implementations of this `IDatabase` interface, allowing the consumer to provide their own configuration file and start using the pp right away.
+- `@mdn-seed/rest` is a REST API using Express and NodeJS to serve data from Firebase's firestore.
 
-## Dev Server
-`yarn start:dev`
+## REST Dev Server
 
-## Unit Tests
+`yarn rest start`
+
+## REST Postman Tests (requires a running server on localhost)
+
+`yarn rest start:newman`
+
+## Unit Tests (runs the unit tests from all modules)
+
 `yarn test`
