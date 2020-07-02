@@ -1,14 +1,13 @@
-import { makePlant, IPlantData, PlantStatus } from '../plant';
+import { makeZone, IZoneData } from '../zone';
 
-describe('Model: Plant', () => {
+describe('Zone', () => {
   it('HAPPY: has a minimum set of params that must be present', () => {
     const reqData = {
-      type: 'Tom',
-      status: PlantStatus.Seed,
+      name: 'Name',
     };
 
-    const actualPlant = makePlant(reqData as any);
-    expect(actualPlant).toEqual({
+    const actualZone = makeZone(reqData as any);
+    expect(actualZone).toEqual({
       ...reqData,
       id: '',
       dataPoints: [],
@@ -17,12 +16,11 @@ describe('Model: Plant', () => {
 
   it('HAPPY: removes fields that are not relevant', () => {
     const reqData = {
-      type: 'Tom',
-      status: PlantStatus.Seed,
+      name: 'Name',
       injected: 'THIS_SHOULD_BE_REMOVED',
     };
 
-    const actual: any = makePlant(reqData as any);
+    const actual: any = makeZone(reqData as any);
     expect(actual.injected).toBeUndefined();
     delete reqData.injected;
     expect(actual).toEqual({
@@ -32,12 +30,13 @@ describe('Model: Plant', () => {
     });
   });
 
-  it('requires a status', () => {
-    const plantData = {
-      name: 'Name',
+  it('requires a name', () => {
+    const zoneData = {
+      length: '15',
     };
     try {
-      const actual = makePlant(plantData as IPlantData);
+      const actual = makeZone(zoneData as IZoneData);
+      // This should NOT be executed
       expect(true).toBe(false);
     } catch (e) {
       console.log(e, { name: e.name, message: e.message });

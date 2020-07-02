@@ -1,7 +1,7 @@
 import {
   IPlantData,
+  IPlant,
   makePlant,
-  Plant,
   PlantStatus,
 } from '../../models/plants/plant';
 import { MethodNotSupportedError } from '../../helpers/errors';
@@ -10,12 +10,11 @@ import { CoreResponse } from '../core/types/response.interface';
 import { handleServiceError } from '../core/helpers/handle-error';
 import { handleSuccess } from '../core/helpers/handle-success';
 import { Service } from '../../services/service.interface';
-import { makeZoneService } from '../../services/zone.service';
-import { IZoneData, Zone } from '../../models/zones/zone';
+import { IZoneData, IZone } from '../../models/zones/zone';
 import {
   makeDataPoint,
   IDataPointData,
-  DataPoint,
+  IDataPoint,
 } from '../../models/data-point/data-point';
 
 // TODO: Consider how to make this less HTTP dependant ...
@@ -26,9 +25,9 @@ export const makePlantsEndpointHandler = ({
   zoneService,
   dataPointService,
 }: {
-  plantService: Service<IPlantData, Plant>;
-  zoneService: Service<IZoneData, Zone>;
-  dataPointService: Service<IDataPointData, DataPoint>;
+  plantService: Service<IPlantData, IPlant>;
+  zoneService: Service<IZoneData, IZone>;
+  dataPointService: Service<IDataPointData, IDataPoint>;
 }) => {
   return async function handle(
     coreRequest: CoreRequest
@@ -77,12 +76,12 @@ export const makePlantsEndpointHandler = ({
 
   async function postPlant(coreRequest: CoreRequest) {
     try {
-      const plant: Plant = makePlant(coreRequest.body as IPlantData);
+      const plant: IPlant = makePlant(coreRequest.body as IPlantData);
       if (plant.zoneId) {
         await zoneService.findById(plant.zoneId);
       }
       const createdPlant = await plantService.create(plant);
-      return handleSuccess(createdPlant);
+      return handleSuccess(createdPlant, 201);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }
@@ -90,7 +89,7 @@ export const makePlantsEndpointHandler = ({
 
   async function postPlantDataPoint(plantId: string, coreRequest: CoreRequest) {
     try {
-      const plant: Plant = await plantService.findById(plantId);
+      const plant: IPlant = await plantService.findById(plantId);
       const dataPoint = makeDataPoint({
         ...coreRequest.body,
         plantId: plant.id,
@@ -106,7 +105,7 @@ export const makePlantsEndpointHandler = ({
       };
       const newPlant = makePlant(newPlantData);
       await plantService.update(newPlant);
-      return handleSuccess(result);
+      return handleSuccess(result, 201);
     } catch (error) {
       // TODO: If the plant doesn't exist, the dataPoint should be deleted...
       return Promise.reject(handleServiceError(error));
@@ -115,7 +114,7 @@ export const makePlantsEndpointHandler = ({
 
   async function getPlant(id: string) {
     try {
-      const plant: Plant = await plantService.findById(id);
+      const plant: IPlant = await plantService.findById(id);
       return handleSuccess(plant);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
@@ -124,7 +123,7 @@ export const makePlantsEndpointHandler = ({
 
   async function updatePlant(id: string, coreRequest: CoreRequest) {
     try {
-      const existingPlant: Plant = await plantService.findById(id);
+      const existingPlant: IPlant = await plantService.findById(id);
       const updatedPlant = makePlant({
         ...existingPlant,
         ...coreRequest.body,

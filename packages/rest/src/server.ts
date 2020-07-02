@@ -53,8 +53,11 @@ function plantsController(req: express.Request, res: express.Response) {
   const coreRequest: CoreRequest = adaptRequest(req);
 
   handlePlantsRequest(coreRequest)
-    .then((response: CoreResponse) => {
-      const { headers, statusCode, data } = adaptResponse(response);
+    .then((coreResponse: CoreResponse) => {
+      const { headers, statusCode, data } = adaptResponse(
+        coreResponse,
+        coreRequest
+      );
       res.set(headers).status(statusCode).send(data);
     })
     .catch((error) => {
@@ -67,8 +70,11 @@ function zonesController(req: express.Request, res: express.Response) {
   const coreRequest: CoreRequest = adaptRequest(req);
 
   handleZonesRequest(coreRequest)
-    .then((response: CoreResponse) => {
-      const { headers, statusCode, data } = adaptResponse(response);
+    .then((coreResponse: CoreResponse) => {
+      const { headers, statusCode, data } = adaptResponse(
+        coreResponse,
+        coreRequest
+      );
       res.set(headers).status(statusCode).send(data);
     })
     .catch((error) => {

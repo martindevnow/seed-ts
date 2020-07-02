@@ -1,5 +1,5 @@
 import { Unit } from '../models/zones/zone';
-import { IPlantData, Plant, PlantStatus } from '../models/plants/plant';
+import { IPlantData, PlantStatus } from '../models/plants/plant';
 
 export const MOCK_ZONE = {
   name: 'Hoth',
@@ -7,6 +7,7 @@ export const MOCK_ZONE = {
   width: '2',
   height: '5',
   units: Unit.Feet,
+  dataPoints: [],
 };
 
 export const MOCK_PLANT: IPlantData = {
@@ -14,6 +15,7 @@ export const MOCK_PLANT: IPlantData = {
   name: 'MOCK_PLANT_NAME',
   status: PlantStatus.Clone,
   strain: 'MOCK_PLANT_STRAIN',
+  dataPoints: [],
 };
 
 export const MOCK_PLANT_2: IPlantData = {
@@ -21,4 +23,5 @@ export const MOCK_PLANT_2: IPlantData = {
   status: PlantStatus.Seedling,
   strain: 'Outdoor',
   name: 'Freebie',
+  dataPoints: [],
 };

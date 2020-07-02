@@ -1,15 +1,15 @@
-import { IZoneData, makeZone, IZone, Zone } from '../../models/zones/zone';
+import { IZoneData, makeZone, IZone } from '../../models/zones/zone';
 import { MethodNotSupportedError } from '../../helpers/errors';
 import { CoreRequest, RequestMethod } from '../core/types/request.interface';
 import { CoreResponse } from '../core/types/response.interface';
 import { handleServiceError } from '../core/helpers/handle-error';
 import { handleSuccess } from '../core/helpers/handle-success';
 import { Service } from '../../services/service.interface';
-import { IPlantData, Plant } from '../../models/plants/plant';
+import { IPlantData, IPlant } from '../../models/plants/plant';
 import {
   makeDataPoint,
   IDataPointData,
-  DataPoint,
+  IDataPoint,
 } from '../../models/data-point/data-point';
 
 // TODO: Consider how to make this less HTTP dependant ...
@@ -20,9 +20,9 @@ export const makeZonesEndpointHandler = ({
   plantService,
   dataPointService,
 }: {
-  zoneService: Service<IZoneData, Zone>;
-  plantService: Service<IPlantData, Plant>;
-  dataPointService: Service<IDataPointData, DataPoint>;
+  zoneService: Service<IZoneData, IZone>;
+  plantService: Service<IPlantData, IPlant>;
+  dataPointService: Service<IDataPointData, IDataPoint>;
 }) => {
   return async function handle(
     coreRequest: CoreRequest
@@ -91,7 +91,7 @@ export const makeZonesEndpointHandler = ({
     try {
       const zoneData = makeZone(coreRequest.body as IZoneData);
       const zone = await zoneService.create(zoneData);
-      return handleSuccess(zone);
+      return handleSuccess(zone, 201);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }
@@ -104,7 +104,7 @@ export const makeZonesEndpointHandler = ({
     const applyToPlants = true;
     try {
       // ensure plant exists
-      const zone: Zone = await zoneService.findById(zoneId);
+      const zone = await zoneService.findById(zoneId);
       const dataPoint = makeDataPoint({
         ...coreRequest.body,
         zoneId: zone.id,
@@ -120,13 +120,13 @@ export const makeZonesEndpointHandler = ({
       const newZone = makeZone(newZoneData);
       await zoneService.update(newZone);
       if (applyToPlants) {
-        const plantsInZone: Array<Plant> = await plantService.findBy(
+        const plantsInZone: Array<IPlant> = await plantService.findBy(
           'zoneId',
           zone.id
         );
       }
 
-      return handleSuccess(zone);
+      return handleSuccess(zone, 201);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }

@@ -1,0 +1,808 @@
+{
+	"info": {
+		"_postman_id": "00354503-e39d-4e3e-a5df-09769c90491a",
+		"name": "Seed",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Plants",
+			"item": [
+				{
+					"name": "Get Plants",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c324ddf6-849a-4e46-8328-4c7ee09e92f3",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/plants",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"plants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Plant ZONE_ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "99dc1a7c-3d31-41a2-af13-40b34cd6ad6f",
+								"exec": [
+									"pm.test(\"Fail POST Plant with Invalid Zone ID (404)\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([404]);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Fruity\",\n    \"type\": \"Grape\",\n    \"zoneId\": \"NOT_FOUND\",\n    \"status\": \"SEED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/plants",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"plants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Plant ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a608aada-4391-4249-8d7e-cbbef6b97eb6",
+								"exec": [
+									"pm.test(\"Fail POST Plant with no Status\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Mary Jane\",\n    \"type\": \"Tomato\",\n    \"strain\": \"Heirloom\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/plants",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"plants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Plant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3acc1ff0-3c0f-4699-b92a-78e1283e94de",
+								"exec": [
+									"pm.test(\"Successfully POST Plant\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
+									"});\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"plantId\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test 2 for .env\",\n    \"type\": \"Grape\",\n    \"strain\": \"Wine\",\n    \"status\": \"SEED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/plants",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"plants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create DataPoint FOR Plant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ef7b66b5-f7c7-4d93-9f8c-39521e6b3f94",
+								"exec": [
+									"pm.test(\"Successfully POST DataPoint to a Plant\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"TEMPERATURE\",\n    \"dataValue\": \"23.6\",\n    \"dataUnit\": \"Celcius\",\n    \"timestamp\": \"123124444444\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/plants/{{plantId}}/data",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"plants",
+								"{{plantId}}",
+								"data"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Plant ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8d20fb20-8b24-42fe-b63a-e1126190b48d",
+								"exec": [
+									"pm.test(\"Invalid PlantStatus => Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Name Field\",\n    \"status\": \"INVALID_STATUS\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/plants/{{plantId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"plants",
+								"{{plantId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Plant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0a996b2b-6162-4e4a-847e-061c91332681",
+								"exec": [
+									"pm.test(\"Successful PATCH request\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Name\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/plants/{{plantId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"plants",
+								"{{plantId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Single Plant ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0e7f7ea9-ab2a-4230-9354-f18dfc44b1ab",
+								"exec": [
+									"pm.test(\"Invalid PlantId => Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/plants/INVALID_ID",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"plants",
+								"INVALID_ID"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Single Plant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3fc36690-3415-43a3-89c8-3cd9a52d5a6c",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/plants/{{plantId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"plants",
+								"{{plantId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Plant ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8deace33-2c37-4f5b-b61e-cb690cb370fc",
+								"exec": [
+									"pm.test(\"Invalid PlantId => Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/plants/INVALID_ID",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"plants",
+								"INVALID_ID"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Plant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2dd83981-e032-4e57-98ad-bda698b8920d",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/plants/{{plantId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"plants",
+								"{{plantId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Zones",
+			"item": [
+				{
+					"name": "Get Zones",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f3043b4d-3baf-4cdc-b80e-2ea22a36ce5e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/zones",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Zone ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "473a1888-86fe-4432-8e6b-5e425f7e8c1c",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"length\": \"10\",\n    \"width\": \"10\",\n    \"height\": \"10\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/zones",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "13e6b6d5-5418-41f9-bac2-f7a8c117575a",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.globals.set(\"zoneId\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Zone A\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/zones",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Plants IN a Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dec7b5de-74f8-44a8-8ee7-36cff39a071b",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/zones/{{zoneId}}/plants",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones",
+								"{{zoneId}}",
+								"plants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Single Zone ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "77e0c4c3-9467-423d-a645-5fe8a67fbdda",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/zones/INVALID_ID",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones",
+								"INVALID_ID"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Single Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9bc08cf0-a25d-483b-b33d-8d01da509614",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/zones/{{zoneId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones",
+								"{{zoneId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Zone ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "350e2f5f-c71a-4823-8d41-4ad7ac3dc02f",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"units\": \"MADE_UP\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/zones/{{zoneId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones",
+								"{{zoneId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "17e66b31-02aa-45d7-9ba4-f99f2f1461c9",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Name Field\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/zones/{{zoneId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones",
+								"{{zoneId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Zone ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea146690-666f-41b4-8aa4-8098a90618b0",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/zones/INVALID_ID",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones",
+								"INVALID_ID"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9a18e51a-7330-4cef-9258-f3d3fe44e8d1",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/zones/{{zoneId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones",
+								"{{zoneId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
