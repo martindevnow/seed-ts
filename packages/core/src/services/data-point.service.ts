@@ -38,7 +38,7 @@ export const makeDataPointService = ({
     return results.map(documentToObj);
   }
 
-  async function findById(id: string): Promise<IDataPoint> {
+  async function findById(id?: string): Promise<IDataPoint> {
     await database.collection('data-points');
     const dataPoint = await database.findById(id);
     return documentToObj(dataPoint);
@@ -63,7 +63,7 @@ export const makeDataPointService = ({
     return documentToObj(result);
   }
 
-  async function destroy(id: string): Promise<boolean> {
+  async function destroy(id?: string): Promise<boolean> {
     await database.collection('data-points');
     const dataPoint = await database.destroy(id);
     return !!dataPoint;

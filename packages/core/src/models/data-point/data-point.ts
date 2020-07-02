@@ -30,11 +30,11 @@ export interface IDataPoint extends IDataPointData {
 export class DataPoint implements IDataPoint {
   id: string;
   readonly type: DataPointType;
-  readonly timestamp;
-  readonly dataValue;
-  readonly dataUnit;
-  readonly plantId;
-  readonly zoneId;
+  readonly timestamp: any;
+  readonly dataValue: any;
+  readonly dataUnit: string; // TODO: Add a type here??
+  readonly plantId?: string;
+  readonly zoneId?: string;
 
   constructor(dataPoint: IDataPoint) {
     if (!dataPoint) {
@@ -58,8 +58,9 @@ export class DataPoint implements IDataPoint {
     this.timestamp = timestamp;
     this.dataValue = dataValue;
     this.dataUnit = dataUnit;
-    this.plantId = plantId || null;
-    this.zoneId = zoneId || null;
+
+    if (plantId) this.plantId = plantId;
+    if (zoneId) this.zoneId = zoneId;
   }
 
   private validate(dataPoint: IDataPoint): IDataPoint {

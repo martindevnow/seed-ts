@@ -6,7 +6,7 @@ newman.run(
     collection: require('./postman.json'),
     reporters: 'cli',
   },
-  function (err) {
+  function (err: any) {
     if (err) {
       throw err;
     }

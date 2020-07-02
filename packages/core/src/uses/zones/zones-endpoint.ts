@@ -104,7 +104,7 @@ export const makeZonesEndpointHandler = ({
     const applyToPlants = true;
     try {
       // ensure plant exists
-      const zone: IZone = await zoneService.findById(zoneId);
+      const zone = await zoneService.findById(zoneId);
       const dataPoint = makeDataPoint({
         ...coreRequest.body,
         zoneId: zone.id,

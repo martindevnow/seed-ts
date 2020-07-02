@@ -15,7 +15,7 @@ export interface IZoneData {
   readonly width?: string;
   readonly height?: string;
   readonly units?: Unit;
-  readonly dataPoints?: Array<any>;
+  readonly dataPoints: Array<any>;
 }
 
 export interface IZone extends IZoneData {
@@ -39,12 +39,15 @@ export class Zone implements IZone {
     const normalZone = this.normalize(validZone);
 
     const { id, name, length, width, height, units, dataPoints } = normalZone;
+
     this.id = id || '';
     this.name = name;
-    this.length = length || null;
-    this.width = width || null;
-    this.height = height || null;
-    this.units = units || null;
+
+    if (length) this.length = length;
+    if (width) this.width = width;
+    if (height) this.height = height;
+    if (units) this.units = units;
+
     this.dataPoints = dataPoints || [];
   }
 

@@ -11,7 +11,6 @@ import { CoreResponse } from '../core/types/response.interface';
 import { handleServiceError } from '../core/helpers/handle-error';
 import { handleSuccess } from '../core/helpers/handle-success';
 import { Service } from '../../services/service.interface';
-import { makeZoneService } from '../../services/zone.service';
 import { IZoneData, IZone } from '../../models/zones/zone';
 import {
   makeDataPoint,

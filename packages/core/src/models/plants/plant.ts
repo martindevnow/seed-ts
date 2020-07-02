@@ -3,6 +3,7 @@ import {
   RequiredParameterError,
   EmptyObjectInitializationError,
 } from '../../helpers/errors';
+import { accessSync } from 'fs';
 
 export enum PlantStatus {
   Seed = 'SEED',
@@ -26,7 +27,7 @@ export interface IPlantData {
   name?: string; // The name given to this particular plant
   parent?: string; // UUID of parent IF is a clone
   zoneId?: string; // UUID of the zone
-  dataPoints?: Array<any>;
+  dataPoints: Array<any>;
 }
 
 export interface IPlant extends IPlantData {
@@ -41,7 +42,7 @@ export class Plant implements IPlant {
   readonly name?: string;
   readonly parent?: string;
   readonly zoneId?: string;
-  readonly dataPoints?: Array<any>;
+  readonly dataPoints: Array<any>;
 
   constructor(plantData: IPlant) {
     console.log('constructor', { plantData });
@@ -50,7 +51,7 @@ export class Plant implements IPlant {
     }
     const validPlant = this.validate(plantData);
     const normalPlant = this.normalize(validPlant);
-
+    console.log({ normalPlant });
     const {
       id,
       type,
@@ -61,17 +62,31 @@ export class Plant implements IPlant {
       zoneId,
       dataPoints,
     } = normalPlant;
-    console.log({ normalPlant });
 
     this.id = id || '';
     this.type = type;
     this.status = status;
-    this.strain = strain || null;
-    this.name = name || null;
-    this.parent = parent || null;
-    this.zoneId = zoneId || null;
+
+    if (name) this.name = name;
+    if (strain) this.strain = strain;
+    if (parent) this.parent = parent;
+    if (zoneId) this.zoneId = zoneId;
+
     this.dataPoints = dataPoints || [];
   }
+
+  // private purge(plantData: IPlant): IPlant {
+  //   const plantProperties = Object.getOwnPropertyNames(this);
+  //   console.log({ plantProperties });
+  //   const dataKeys = Object.keys(plantData);
+  //   console.log({ dataKeys });
+  //   // const cleanData: IPlant = dataKeys.reduce((acc, curr) => {
+  //   //   if (plantProperties.includes(curr)) {
+  //   //     return { ...acc, [curr]: plantData[curr] };
+  //   //   }
+  //   // }, {}) as IPlant;
+  //   return plantData;
+  // }
 
   private validate(plantData: IPlant): IPlant {
     if (!plantData.status) {
@@ -96,7 +111,17 @@ export class Plant implements IPlant {
   }
 }
 
-export const makePlant = (plantData: IPlantData): Plant => {
+export const makePlant = (plantData: IPlant): Plant => {
+  const {
+    id,
+    type,
+    status,
+    strain,
+    name,
+    parent,
+    zoneId,
+    dataPoints,
+  } = plantData;
   return new Plant(plantData);
 };
 
