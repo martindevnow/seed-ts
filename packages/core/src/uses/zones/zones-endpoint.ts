@@ -1,4 +1,4 @@
-import { IZoneData, makeZone, IZone, Zone } from '../../models/zones/zone';
+import { IZoneData, makeZone, IZone } from '../../models/zones/zone';
 import { MethodNotSupportedError } from '../../helpers/errors';
 import { CoreRequest, RequestMethod } from '../core/types/request.interface';
 import { CoreResponse } from '../core/types/response.interface';
@@ -91,7 +91,7 @@ export const makeZonesEndpointHandler = ({
     try {
       const zoneData = makeZone(coreRequest.body as IZoneData);
       const zone = await zoneService.create(zoneData);
-      return handleSuccess(zone);
+      return handleSuccess(zone, 201);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }
@@ -126,7 +126,7 @@ export const makeZonesEndpointHandler = ({
         );
       }
 
-      return handleSuccess(zone);
+      return handleSuccess(zone, 201);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }

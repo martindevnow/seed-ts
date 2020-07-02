@@ -2,6 +2,7 @@ import sanitize from '../../helpers/sanitize';
 import {
   RequiredParameterError,
   EmptyObjectInitializationError,
+  InvalidPropertyError,
 } from '../../helpers/errors';
 
 export enum Unit {
@@ -10,64 +11,72 @@ export enum Unit {
 }
 
 export interface IZoneData {
-  readonly name: string;
-  readonly length?: string;
-  readonly width?: string;
-  readonly height?: string;
-  readonly units?: Unit;
-  readonly dataPoints: Array<any>;
+  name: string;
+  parent?: string;
+  length?: string;
+  width?: string;
+  height?: string;
+  units?: Unit;
+  dataPoints: Array<any>;
 }
 
 export interface IZone extends IZoneData {
   id?: string;
 }
 
-export class Zone implements IZone {
-  id: string;
-  readonly name: string;
-  readonly length?: string;
-  readonly width?: string;
-  readonly height?: string;
-  readonly units?: Unit;
-  readonly dataPoints: Array<any>;
+type ZoneProperty = keyof IZone;
 
-  constructor(zoneData: IZone) {
-    if (!zoneData) {
-      throw new EmptyObjectInitializationError('IPlant');
-    }
-    const validZone = this.validate(zoneData);
-    const normalZone = this.normalize(validZone);
-
-    const { id, name, length, width, height, units, dataPoints } = normalZone;
-
-    this.id = id || '';
-    this.name = name;
-
-    if (length) this.length = length;
-    if (width) this.width = width;
-    if (height) this.height = height;
-    if (units) this.units = units;
-
-    this.dataPoints = dataPoints || [];
+export const makeZone = (zoneData: IZoneData): Readonly<IZone> => {
+  if (!zoneData) {
+    throw new EmptyObjectInitializationError('IZone');
   }
+  const validZone = validate(zoneData);
+  const normalZone = normalize(validZone);
 
-  private validate(zoneData: IZone): IZone {
+  return Object.freeze(normalZone);
+
+  function validate(zoneData: IZone): IZone {
     if (!zoneData.name) {
       console.error(`Error: "name" is missing from zoneData`);
       throw new RequiredParameterError('name');
     }
+    if (zoneData.units && !isUnitsValid(zoneData.units)) {
+      throw new InvalidPropertyError('units');
+    }
     return zoneData;
   }
 
-  private normalize({ name, ...other }: IZone): IZone {
-    // TODO: perform some normalization on the data...
-    return {
+  function normalize(zoneData: IZone): IZone {
+    const {
+      id = '',
+      name,
+      length,
+      width,
+      height,
+      units,
+      parent,
+      dataPoints = [],
+    } = zoneData;
+    const onlyValidFields = {
+      id,
       name: sanitize(name),
-      ...other,
+      length,
+      width,
+      height,
+      units,
+      parent,
+      dataPoints,
     };
-  }
-}
 
-export const makeZone = (zoneData: IZoneData): Zone => {
-  return new Zone(zoneData);
+    Object.keys(onlyValidFields).forEach((field: string) => {
+      if (onlyValidFields[field as ZoneProperty] === undefined) {
+        delete onlyValidFields[field as ZoneProperty];
+      }
+    });
+    return onlyValidFields;
+  }
+
+  function isUnitsValid(units: Unit) {
+    return !!Object.values(Unit).includes(units);
+  }
 };

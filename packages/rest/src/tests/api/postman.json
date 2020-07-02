@@ -435,6 +435,20 @@
 			"item": [
 				{
 					"name": "Get Zones",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f3043b4d-3baf-4cdc-b80e-2ea22a36ce5e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -452,96 +466,41 @@
 					"response": []
 				},
 				{
-					"name": "Get Plants IN a Zone",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:9000/zones/{{zoneId}}/plants",
-							"host": [
-								"localhost"
-							],
-							"port": "9000",
-							"path": [
-								"zones",
-								"{{zoneId}}",
-								"plants"
-							]
+					"name": "Create Zone ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "473a1888-86fe-4432-8e6b-5e425f7e8c1c",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Zone",
+					],
 					"request": {
-						"method": "DELETE",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"length\": \"10\",\n    \"width\": \"10\",\n    \"height\": \"10\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "localhost:9000/zones/{{zoneId}}",
+							"raw": "localhost:9000/zones",
 							"host": [
 								"localhost"
 							],
 							"port": "9000",
 							"path": [
-								"zones",
-								"{{zoneId}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Zone ERROR",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:9000/zones/INVALID_ID",
-							"host": [
-								"localhost"
-							],
-							"port": "9000",
-							"path": [
-								"zones",
-								"INVALID_ID"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get a Single Zone",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:9000/zones/{{zoneId}}",
-							"host": [
-								"localhost"
-							],
-							"port": "9000",
-							"path": [
-								"zones",
-								"{{zoneId}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get a Single Zone ERROR",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:9000/zones/INVALID_ID",
-							"host": [
-								"localhost"
-							],
-							"port": "9000",
-							"path": [
-								"zones",
-								"INVALID_ID"
+								"zones"
 							]
 						}
 					},
@@ -555,8 +514,12 @@
 							"script": {
 								"id": "13e6b6d5-5418-41f9-bac2-f7a8c117575a",
 								"exec": [
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
+									"});\r",
+									"\r",
 									"var jsonData = pm.response.json();\r",
-									"pm.globals.set(\"variable_key\", jsonData.id);"
+									"pm.globals.set(\"zoneId\", jsonData.id);"
 								],
 								"type": "text/javascript"
 							}
@@ -588,13 +551,127 @@
 					"response": []
 				},
 				{
-					"name": "Create Zone ERROR",
+					"name": "Get Plants IN a Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dec7b5de-74f8-44a8-8ee7-36cff39a071b",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
-						"method": "POST",
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/zones/{{zoneId}}/plants",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones",
+								"{{zoneId}}",
+								"plants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Single Zone ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "77e0c4c3-9467-423d-a645-5fe8a67fbdda",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/zones/INVALID_ID",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones",
+								"INVALID_ID"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Single Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9bc08cf0-a25d-483b-b33d-8d01da509614",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/zones/{{zoneId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones",
+								"{{zoneId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Zone ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "350e2f5f-c71a-4823-8d41-4ad7ac3dc02f",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"length\": \"10\",\n    \"width\": \"10\",\n    \"height\": \"10\"\n}",
+							"raw": "{\n    \"units\": \"MADE_UP\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -602,13 +679,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:9000/zones",
+							"raw": "localhost:9000/zones/{{zoneId}}",
 							"host": [
 								"localhost"
 							],
 							"port": "9000",
 							"path": [
-								"zones"
+								"zones",
+								"{{zoneId}}"
 							]
 						}
 					},
@@ -616,6 +694,20 @@
 				},
 				{
 					"name": "Update Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "17e66b31-02aa-45d7-9ba4-f99f2f1461c9",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PATCH",
 						"header": [],
@@ -643,19 +735,57 @@
 					"response": []
 				},
 				{
-					"name": "Update Zone ERROR",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"units\": \"MADE_UP\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
+					"name": "Delete Zone ERROR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea146690-666f-41b4-8aa4-8098a90618b0",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
 							}
-						},
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/zones/INVALID_ID",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"zones",
+								"INVALID_ID"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9a18e51a-7330-4cef-9258-f3d3fe44e8d1",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
 						"url": {
 							"raw": "localhost:9000/zones/{{zoneId}}",
 							"host": [
