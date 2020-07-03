@@ -1,4 +1,4 @@
-import { CoreErrorResponse } from '../types/error-response.interface';
+import { CoreErrorResponse } from '../types/core-error-response.interface';
 import { ServiceError } from '../types/service-error.interface';
 
 export const handleServiceError = (error: any): CoreErrorResponse => {

@@ -7,6 +7,8 @@ import { IDatabase } from '@mdn-seed/db';
 import { Service } from './service.interface';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
 
+export type DataPointService = Service<IDataPointData, IDataPoint>;
+
 export const makeDataPointService = ({
   database,
 }: {

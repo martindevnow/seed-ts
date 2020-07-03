@@ -3,11 +3,13 @@ import { IPlantData, makePlant, IPlant } from '../models/plants/plant';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
 import { Service } from './service.interface';
 
+export type PlantService = Service<IPlantData, IPlant>;
+
 export const makePlantService = ({
   database,
 }: {
   database: IDatabase;
-}): Service<IPlantData, IPlant> => {
+}): PlantService => {
   return Object.freeze({
     create,
     update,

@@ -1,16 +1,19 @@
 import { IZoneData, makeZone, IZone } from '../../models/zones/zone';
 import { MethodNotSupportedError } from '../../helpers/errors';
-import { CoreRequest, RequestMethod } from '../core/types/request.interface';
-import { CoreResponse } from '../core/types/response.interface';
+import {
+  CoreRequest,
+  RequestMethod,
+} from '../core/types/core-request.interface';
+import {
+  CoreResponse,
+  CoreResponseStatus,
+} from '../core/types/core-response.interface';
 import { handleServiceError } from '../core/helpers/handle-error';
 import { handleSuccess } from '../core/helpers/handle-success';
-import { Service } from '../../services/service.interface';
-import { IPlantData, IPlant } from '../../models/plants/plant';
-import {
-  makeDataPoint,
-  IDataPointData,
-  IDataPoint,
-} from '../../models/data-point/data-point';
+import { Models } from '../../models/models';
+import { ZoneService } from '../../services/zone.service';
+import { PlantService } from '../../services/plant.service';
+import { DataPointService } from '../../services/data-point.service';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
@@ -20,146 +23,86 @@ export const makeZonesEndpointHandler = ({
   plantService,
   dataPointService,
 }: {
-  zoneService: Service<IZoneData, IZone>;
-  plantService: Service<IPlantData, IPlant>;
-  dataPointService: Service<IDataPointData, IDataPoint>;
+  zoneService: ZoneService;
+  plantService: PlantService;
+  dataPointService: DataPointService;
 }) => {
   return async function handle(
     coreRequest: CoreRequest
   ): Promise<CoreResponse> {
-    const {
-      path,
-      method,
-      pathParams: { id },
-    } = coreRequest;
+    const { model, method } = coreRequest;
+    if (model !== Models.Zone) {
+      return Promise.reject(
+        handleServiceError(
+          new Error('Zone :: Are you sure you meant to do this?')
+        )
+      );
+    }
 
     // TODO: Make a helper function for this that will sanitize
     // and parse the path into something useful
-    const pathArr = path.split('/');
-
-    console.log({ id, path });
     switch (coreRequest.method) {
-      case RequestMethod.POST:
-        return id && pathArr[3] === 'data'
-          ? postZoneDataPoint(id, coreRequest)
-          : postZone(coreRequest);
-      case RequestMethod.GET:
-        return id
-          ? pathArr[3] === 'plants'
-            ? getPlantsInZone(id)
-            : getZone(id)
-          : getZones();
-      case RequestMethod.PATCH:
-        return id
-          ? updateZone(id, coreRequest)
-          : Promise.reject(
-              handleServiceError(new MethodNotSupportedError(method, path))
-            );
-      case RequestMethod.DELETE:
-        return id
-          ? destroyZone(id)
-          : Promise.reject(
-              handleServiceError(new MethodNotSupportedError(method, path))
-            );
+      case RequestMethod.CREATE:
+        return createZone(coreRequest);
+      case RequestMethod.READ:
+        return readZone(coreRequest);
+      case RequestMethod.UPDATE:
+        return updateZone(coreRequest);
+      case RequestMethod.DESTROY:
+        return destroyZone(coreRequest);
       default:
         return Promise.reject(
-          handleServiceError(new MethodNotSupportedError(method, path))
+          handleServiceError(new MethodNotSupportedError(method, model))
         );
     }
   };
 
-  async function getZones() {
+  async function readZone(coreRequest: CoreRequest) {
     try {
-      const zones = await zoneService.getAll();
-      return handleSuccess(zones);
+      const { id } = coreRequest.params;
+      const result = id
+        ? await zoneService.findById(id)
+        : await zoneService.getAll();
+      return handleSuccess(result, CoreResponseStatus.ReadSuccess);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }
   }
 
-  async function getPlantsInZone(id: string) {
-    console.log('getPlantsInZone');
-    try {
-      const plants = await plantService.findBy('zoneId', id);
-      return handleSuccess(plants);
-    } catch (error) {
-      return Promise.reject(handleServiceError(error));
-    }
-  }
-
-  async function postZone(coreRequest: CoreRequest) {
+  async function createZone(coreRequest: CoreRequest) {
     try {
       const zoneData = makeZone(coreRequest.body as IZoneData);
       const zone = await zoneService.create(zoneData);
-      return handleSuccess(zone, 201);
+      return handleSuccess(zone, CoreResponseStatus.CreatedSuccess);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }
   }
 
-  async function postZoneDataPoint(zoneId: string, coreRequest: CoreRequest) {
-    // TODO: Enhance this so that the Zone has an array of the latest DataPoints
-
-    // TODO: Query params should identify if it should penetrate subzones and/or subplants
-    const applyToPlants = true;
+  async function updateZone(coreRequest: CoreRequest) {
     try {
-      // ensure plant exists
-      const zone = await zoneService.findById(zoneId);
-      const dataPoint = makeDataPoint({
-        ...coreRequest.body,
-        zoneId: zone.id,
-      });
-      const result = await dataPointService.create(dataPoint);
-      // TODO: Give each model the ability to update it's own dataPoints array
-      const zonesDataPoints = zone.dataPoints.filter((dp) => !!dp);
-      zonesDataPoints.push(result.id);
-      const newZoneData = {
-        ...zone,
-        dataPoints: zonesDataPoints,
-      };
-      const newZone = makeZone(newZoneData);
-      await zoneService.update(newZone);
-      if (applyToPlants) {
-        const plantsInZone: Array<IPlant> = await plantService.findBy(
-          'zoneId',
-          zone.id
-        );
-      }
-
-      return handleSuccess(zone, 201);
-    } catch (error) {
-      return Promise.reject(handleServiceError(error));
-    }
-  }
-
-  async function getZone(id: string) {
-    try {
-      const zone = await zoneService.findById(id);
-      return handleSuccess(zone);
-    } catch (error) {
-      return Promise.reject(handleServiceError(error));
-    }
-  }
-
-  async function updateZone(id: string, coreRequest: CoreRequest) {
-    try {
+      const { id } = coreRequest.params;
       const existingZone: IZone = await zoneService.findById(id);
       const updatedZone = makeZone({
         ...existingZone,
         ...coreRequest.body,
       });
       const result = await zoneService.update(updatedZone);
-      return handleSuccess(result);
+      return handleSuccess(result, CoreResponseStatus.UpdatedSuccess);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }
   }
 
-  async function destroyZone(id: string) {
+  async function destroyZone(coreRequest: CoreRequest) {
     try {
+      const { id } = coreRequest.params;
       await zoneService.findById(id);
       await zoneService.destroy(id);
-      return handleSuccess({ success: true }, 204);
+      return handleSuccess(
+        { success: true },
+        CoreResponseStatus.DestroyedSuccess
+      );
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }
