@@ -23,6 +23,6 @@ jobs:
 workflows:
   rest-build-and-test:
     jobs:
-      - build-and-test
+      - rest-build-and-test
       # TODO: Add a real build step
       # Use a "production start" for testing the REST API
