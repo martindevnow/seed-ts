@@ -11,7 +11,8 @@ jobs:
           steps:
             - run: yarn install
             - run: yarn test
-            - run: yarn rest start & sleep 10
+            - run: yarn rest start &
+            - run: sleep 10
             - run: curl http://localhost:9000/plants
             # - run: wget --retry-connrefused --waitretry=1 --read-timeout=60 --timeout=55 -t 55 http://localhost:9000/plants
             - run: yarn rest test:newman
