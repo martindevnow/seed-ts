@@ -27,43 +27,18 @@ export interface IDataPoint extends IDataPointData {
   id?: string;
 }
 
-export class DataPoint implements IDataPoint {
-  id: string;
-  readonly type: DataPointType;
-  readonly timestamp: any;
-  readonly dataValue: any;
-  readonly dataUnit: string; // TODO: Add a type here??
-  readonly plantId?: string;
-  readonly zoneId?: string;
+type DataPointProperty = keyof IDataPoint;
 
-  constructor(dataPoint: IDataPoint) {
-    if (!dataPoint) {
-      throw new EmptyObjectInitializationError('DataPoint');
-    }
-
-    const validDataPoint = this.validate(dataPoint);
-    const normalDataPoint = this.normalize(validDataPoint);
-
-    const {
-      id,
-      type,
-      timestamp,
-      dataValue,
-      dataUnit,
-      plantId,
-      zoneId,
-    } = normalDataPoint;
-    this.id = id || '';
-    this.type = type;
-    this.timestamp = timestamp;
-    this.dataValue = dataValue;
-    this.dataUnit = dataUnit;
-
-    if (plantId) this.plantId = plantId;
-    if (zoneId) this.zoneId = zoneId;
+export const makeDataPoint = (dataPoint: IDataPoint): IDataPoint => {
+  if (!dataPoint) {
+    throw new EmptyObjectInitializationError('IDataPoint');
   }
+  const validDataPoint = validate(dataPoint);
+  const normalDataPoint = normalize(validDataPoint);
 
-  private validate(dataPoint: IDataPoint): IDataPoint {
+  return Object.freeze(normalDataPoint);
+
+  function validate(dataPoint: IDataPoint): IDataPoint {
     if (!Object.values(DataPointType).includes(dataPoint.type)) {
       throw new InvalidPropertyError(
         `${dataPoint.type} is an invalid DataPoint type`
@@ -82,11 +57,30 @@ export class DataPoint implements IDataPoint {
     return dataPoint;
   }
 
-  private normalize(dataPoint: IDataPoint): IDataPoint {
-    return dataPoint;
+  function normalize(dataPoint: IDataPoint): IDataPoint {
+    const {
+      id,
+      type,
+      timestamp,
+      dataValue,
+      dataUnit,
+      plantId,
+      zoneId,
+    } = dataPoint;
+    const onlyValidFields = {
+      id,
+      type,
+      timestamp,
+      dataValue,
+      dataUnit,
+      plantId,
+      zoneId,
+    };
+    Object.keys(onlyValidFields).forEach((field: string) => {
+      if (onlyValidFields[field as DataPointProperty] === undefined) {
+        delete onlyValidFields[field as DataPointProperty];
+      }
+    });
+    return onlyValidFields;
   }
-}
-
-export const makeDataPoint = (dataPointData: IDataPointData): DataPoint => {
-  return new DataPoint(dataPointData);
 };

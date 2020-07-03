@@ -80,7 +80,7 @@ export const makePlantsEndpointHandler = ({
       return Promise.reject(handleServiceError(error));
     }
   }
-
+  // This functionality was moved to the data-points-endpoint
   // async function postPlantDataPoint(plantId: string, coreRequest: CoreRequest) {
   //   try {
   //     const plant: IPlant = await plantService.findById(plantId);
