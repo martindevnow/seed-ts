@@ -11,7 +11,12 @@ jobs:
           steps:
             - run: yarn install
             - run: yarn test
+            - run: yarn rest start &
+            - run: wget --retry-connrefused --waitretry=1 --read-timeout=60 --timeout=55 -t 55 http://localhost:9000/plants
+            - run: yarn rest test:newman
 workflows:
   build-and-test:
     jobs:
       - build-and-test
+      # TODO: Add a real build step
+      # Use a "production start" for testing the REST API
