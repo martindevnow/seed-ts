@@ -1,7 +1,7 @@
 import {
-  EmptyObjectInitializationError,
   InvalidPropertyError,
   RequiredParameterError,
+  emptyObjectInitialization,
 } from '../../helpers/errors';
 
 export enum DataPointType {
@@ -29,10 +29,9 @@ export interface IDataPoint extends IDataPointData {
 
 type DataPointProperty = keyof IDataPoint;
 
-export const makeDataPoint = (dataPoint: IDataPoint): IDataPoint => {
-  if (!dataPoint) {
-    throw new EmptyObjectInitializationError('IDataPoint');
-  }
+export const makeDataPoint = (
+  dataPoint: IDataPoint = emptyObjectInitialization('dataPointData')
+): IDataPoint => {
   const validDataPoint = validate(dataPoint);
   const normalDataPoint = normalize(validDataPoint);
 

@@ -1,7 +1,8 @@
 import { makePlant, IPlantData, PlantStatus } from '../plant';
+import { EmptyObjectInitializationError } from '../../../helpers/errors';
 
 describe('Model: Plant', () => {
-  it('HAPPY: has a minimum set of params that must be present', () => {
+  it('(HAPPY) Plant :: has a minimum set of params that must be present', () => {
     const reqData = {
       type: 'Tom',
       status: PlantStatus.Seed,
@@ -14,7 +15,7 @@ describe('Model: Plant', () => {
     });
   });
 
-  it('HAPPY: removes fields that are not relevant', () => {
+  it('(HAPPY) Plant :: removes fields that are not relevant', () => {
     const reqData = {
       type: 'Tom',
       status: PlantStatus.Seed,
@@ -30,7 +31,18 @@ describe('Model: Plant', () => {
     });
   });
 
-  it('requires a status', () => {
+  it('(ERROR) Plant :: throws an error if factory function receives no argument', () => {
+    try {
+      makePlant();
+      // This should not run
+      expect(false).toBe(true);
+    } catch (error) {
+      expect(error).toEqual(new EmptyObjectInitializationError('plantData'));
+      expect(true).toBe(true);
+    }
+  });
+
+  it('(ERROR) Plant :: requires a status', () => {
     const plantData = {
       name: 'Name',
     };
@@ -38,7 +50,6 @@ describe('Model: Plant', () => {
       const actual = makePlant(plantData as IPlantData);
       expect(true).toBe(false);
     } catch (e) {
-      console.log(e, { name: e.name, message: e.message });
       expect(true).toBe(true);
     }
   });

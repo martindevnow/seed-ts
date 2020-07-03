@@ -3,6 +3,7 @@ import {
   RequiredParameterError,
   EmptyObjectInitializationError,
   InvalidPropertyError,
+  emptyObjectInitialization,
 } from '../../helpers/errors';
 
 export enum Unit {
@@ -26,10 +27,9 @@ export interface IZone extends IZoneData {
 
 type ZoneProperty = keyof IZone;
 
-export const makeZone = (zoneData: IZoneData): Readonly<IZone> => {
-  if (!zoneData) {
-    throw new EmptyObjectInitializationError('IZone');
-  }
+export const makeZone = (
+  zoneData: IZoneData = emptyObjectInitialization('zoneData')
+): Readonly<IZone> => {
   const validZone = validate(zoneData);
   const normalZone = normalize(validZone);
 

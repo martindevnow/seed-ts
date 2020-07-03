@@ -1,7 +1,7 @@
 import {
   InvalidPropertyError,
   RequiredParameterError,
-  EmptyObjectInitializationError,
+  emptyObjectInitialization,
 } from '../../helpers/errors';
 
 export enum PlantStatus {
@@ -35,11 +35,9 @@ export interface IPlant extends IPlantData {
 
 type PlantProperty = keyof IPlant;
 
-export const makePlant = (plantData: IPlant): Readonly<IPlant> => {
-  if (!plantData) {
-    throw new EmptyObjectInitializationError('IPlant');
-  }
-
+export const makePlant = (
+  plantData: IPlant = emptyObjectInitialization('plantData')
+): Readonly<IPlant> => {
   const validPlant = validate(plantData);
   const normalPlant = normalize(validPlant);
 
