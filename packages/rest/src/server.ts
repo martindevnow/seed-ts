@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 
 import {
   makeDataPointService,
+  makeDataPointsEndpointHandler,
   makePlantService,
   makePlantsEndpointHandler,
   CoreResponse,
@@ -36,6 +37,11 @@ const handleZonesRequest = makeZonesEndpointHandler({
   zoneService,
   dataPointService,
 });
+const handleDataPointsRequest = makeDataPointsEndpointHandler({
+  plantService,
+  zoneService,
+  dataPointService,
+});
 
 const app = express();
 
@@ -43,11 +49,10 @@ app.use(bodyParser.json());
 
 app.all('/plants', plantsController);
 app.all('/plants/:id', plantsController);
-app.all('/plants/:id/data', plantsController);
+app.all('/data-points', dataPointsController);
 app.all('/zones', zonesController);
 app.all('/zones/:id', zonesController);
 app.all('/zones/:id/plants', zonesController);
-app.all('/zones/:id/data', zonesController);
 
 function plantsController(req: express.Request, res: express.Response) {
   const coreRequest: CoreRequest = adaptRequest(req);
@@ -70,6 +75,23 @@ function zonesController(req: express.Request, res: express.Response) {
   const coreRequest: CoreRequest = adaptRequest(req);
 
   handleZonesRequest(coreRequest)
+    .then((coreResponse: CoreResponse) => {
+      const { headers, statusCode, data } = adaptResponse(
+        coreResponse,
+        coreRequest
+      );
+      res.set(headers).status(statusCode).send(data);
+    })
+    .catch((error) => {
+      const { headers, statusCode, data } = adaptError(error);
+      res.set(headers).status(statusCode).send(data);
+    });
+}
+
+function dataPointsController(req: express.Request, res: express.Response) {
+  const coreRequest: CoreRequest = adaptRequest(req);
+
+  handleDataPointsRequest(coreRequest)
     .then((coreResponse: CoreResponse) => {
       const { headers, statusCode, data } = adaptResponse(
         coreResponse,

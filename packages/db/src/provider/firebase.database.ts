@@ -53,6 +53,9 @@ export default function makeFirebaseDatabase({
     // TODO: This should be in a try catch and return an error.
     // Layers outside should be able to handle those and pass them up
     // Each layer outside that getting more context to format them appropriately
+    if (item.id) {
+      delete item.id;
+    }
     const docRef = await database
       .collection(currentCollection)
       .add({ ...item });

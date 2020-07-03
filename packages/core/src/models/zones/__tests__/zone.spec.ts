@@ -1,6 +1,6 @@
 import { makeZone, IZoneData } from '../zone';
 
-describe('Zone', () => {
+describe('Model: Zone', () => {
   it('HAPPY: has a minimum set of params that must be present', () => {
     const reqData = {
       name: 'Name',
@@ -9,7 +9,6 @@ describe('Zone', () => {
     const actualZone = makeZone(reqData as any);
     expect(actualZone).toEqual({
       ...reqData,
-      id: '',
       dataPoints: [],
     });
   });
@@ -25,7 +24,6 @@ describe('Zone', () => {
     delete reqData.injected;
     expect(actual).toEqual({
       ...reqData,
-      id: '',
       dataPoints: [],
     });
   });

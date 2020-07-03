@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
-  build-and-test:
+  rest-build-and-test:
     executor:
       name: node/default
     steps:
@@ -11,7 +11,18 @@ jobs:
           steps:
             - run: yarn install
             - run: yarn test
+            - run:
+                command: yarn rest start
+                background: true
+            - run:
+                shell: /bin/sh
+                command: |
+                  wget --retry-connrefused --waitretry=1 --read-timeout=60 --timeout=55 -t 55 http://localhost:9000/plants
+                  :
+            - run: yarn rest test:newman
 workflows:
-  build-and-test:
+  rest-build-and-test:
     jobs:
-      - build-and-test
+      - rest-build-and-test
+      # TODO: Add a real build step
+      # Use a "production start" for testing the REST API

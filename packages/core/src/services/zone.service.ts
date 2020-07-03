@@ -2,13 +2,14 @@ import { IDatabase } from '@mdn-seed/db';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
 import { IZoneData, makeZone, IZone } from '../models/zones/zone';
 import { Service } from './service.interface';
-import { RequiredParameterError } from '../helpers/errors';
+
+export type ZoneService = Service<IZoneData, IZone>;
 
 export const makeZoneService = ({
   database,
 }: {
   database: IDatabase;
-}): Service<IZoneData, IZone> => {
+}): ZoneService => {
   return Object.freeze({
     create,
     update,

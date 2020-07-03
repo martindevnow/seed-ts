@@ -1,4 +1,4 @@
-import { CoreResponse } from '@mdn-seed/core/src/uses/core/types/response.interface';
+import { CoreResponse } from '@mdn-seed/core';
 import { HttpResponse } from '../../api/types/http-response.interface';
 import { CoreRequest } from '@mdn-seed/core';
 

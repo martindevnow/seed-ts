@@ -189,7 +189,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"type\": \"TEMPERATURE\",\n    \"dataValue\": \"23.6\",\n    \"dataUnit\": \"Celcius\",\n    \"timestamp\": \"123124444444\"\n}",
+							"raw": "{\n    \"plantId\": \"{{plantId}}\",\n    \"type\": \"TEMPERATURE\",\n    \"dataValue\": \"23.6\",\n    \"dataUnit\": \"Celcius\",\n    \"timestamp\": \"123124444444\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -197,15 +197,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:9000/plants/{{plantId}}/data",
+							"raw": "localhost:9000/data-points/",
 							"host": [
 								"localhost"
 							],
 							"port": "9000",
 							"path": [
-								"plants",
-								"{{plantId}}",
-								"data"
+								"data-points",
+								""
 							]
 						}
 					},
