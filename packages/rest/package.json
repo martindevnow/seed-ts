@@ -16,7 +16,8 @@
     "ts-node": "^8.10.2"
   },
   "scripts": {
-    "start": "nodemon --watch '../**/*.ts' --ignore 'src/**/*.spec.ts' src/server.ts",
+    "start:dev": "nodemon --watch '../**/*.ts' --ignore 'src/**/*.spec.ts' src/server.ts",
+    "start": "ts-node ./src/server.ts",
     "test:newman": "ts-node ./src/tests/api/plants.ts"
   }
 }
