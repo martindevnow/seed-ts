@@ -64,3 +64,9 @@ export class EmptyObjectInitializationError extends Error {
     }
   }
 }
+
+// Builders
+
+export const emptyObjectInitialization = (param = ''): any => {
+  throw new EmptyObjectInitializationError(param);
+};
