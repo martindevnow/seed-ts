@@ -14,6 +14,11 @@ import { Models } from '../../models/models';
 import { PlantService } from '../../services/plant.service';
 import { ZoneService } from '../../services/zone.service';
 import { DataPointService } from '../../services/data-point.service';
+import { EventEmitter } from 'events';
+import {
+  PlantEvents,
+  PlantCreatedEvent,
+} from '../../models/plants/plant.events';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
@@ -22,10 +27,12 @@ export const makePlantsEndpointHandler = ({
   plantService,
   zoneService,
   dataPointService,
+  eventEmitter,
 }: {
   plantService: PlantService;
   zoneService: ZoneService;
   dataPointService: DataPointService;
+  eventEmitter: EventEmitter;
 }) => {
   return async function handle(
     coreRequest: CoreRequest
@@ -129,6 +136,9 @@ export const makePlantsEndpointHandler = ({
       const { id } = coreRequest.params;
       await plantService.findById(id);
       await plantService.destroy(id);
+
+      eventEmitter.emit(PlantEvents.DESTROYED, PlantCreatedEvent(id));
+
       return handleSuccess(
         { success: true },
         CoreResponseStatus.DestroyedSuccess

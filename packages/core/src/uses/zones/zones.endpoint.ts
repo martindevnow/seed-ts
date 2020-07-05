@@ -14,6 +14,7 @@ import { Models } from '../../models/models';
 import { ZoneService } from '../../services/zone.service';
 import { PlantService } from '../../services/plant.service';
 import { DataPointService } from '../../services/data-point.service';
+import { EventEmitter } from 'events';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
@@ -22,10 +23,12 @@ export const makeZonesEndpointHandler = ({
   zoneService,
   plantService,
   dataPointService,
+  eventEmitter,
 }: {
   zoneService: ZoneService;
   plantService: PlantService;
   dataPointService: DataPointService;
+  eventEmitter: EventEmitter;
 }) => {
   return async function handle(
     coreRequest: CoreRequest

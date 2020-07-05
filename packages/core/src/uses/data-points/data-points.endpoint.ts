@@ -19,16 +19,24 @@ import { ZoneService } from '../../services/zone.service';
 import { PlantService } from '../../services/plant.service';
 import { DataPointService } from '../../services/data-point.service';
 import { MethodNotSupportedError } from '../../helpers/errors';
+import { EventEmitter } from 'events';
+import { PlantEvents } from '../../models/plants/plant.events';
 
 export const makeDataPointsEndpointHandler = ({
   dataPointService,
   zoneService,
   plantService,
+  eventEmitter,
 }: {
   zoneService: ZoneService;
   plantService: PlantService;
   dataPointService: DataPointService;
+  eventEmitter: EventEmitter;
 }) => {
+  eventEmitter.on(PlantEvents.DESTROYED, (...args) => {
+    console.log({ args });
+    destroyDataPointsForPlant(args[0].plantId);
+  });
   return async function handle(
     coreRequest: CoreRequest
   ): Promise<CoreResponse> {
@@ -43,13 +51,13 @@ export const makeDataPointsEndpointHandler = ({
 
     switch (coreRequest.method) {
       case RequestMethod.CREATE:
-        return createDataPoint(coreRequest);
+        return createDataPointEndpoint(coreRequest);
       case RequestMethod.READ:
-        return readDataPoint(coreRequest);
+        return readDataPointEndpoint(coreRequest);
       // case RequestMethod.UPDATE:
       //   return updateDataPoint(coreRequest);
-      // case RequestMethod.DESTROY:
-      //   return destroyDataPoint(coreRequest);
+      case RequestMethod.DESTROY:
+        return destroyDataPointEndpoint(coreRequest);
       default:
         return Promise.reject(
           handleServiceError(new MethodNotSupportedError(method, model))
@@ -57,13 +65,17 @@ export const makeDataPointsEndpointHandler = ({
     }
   };
 
-  async function createDataPoint(coreRequest: CoreRequest) {
+  async function createDataPointEndpoint(coreRequest: CoreRequest) {
     try {
       const data = coreRequest.body;
       const { zoneId, plantId } = data;
       const dataPoint = makeDataPoint(data);
-      const zone = zoneId ? await zoneService.findById(zoneId) : null;
-      const plant = plantId ? await plantService.findById(plantId) : null;
+
+      // Ensure Related Zone/Plant exists
+      zoneId ? await zoneService.findById(zoneId) : null;
+      plantId ? await plantService.findById(plantId) : null;
+
+      // Save DP
       const dp = await dataPointService.create(dataPoint);
       return handleSuccess(dp, CoreResponseStatus.CreatedSuccess);
     } catch (error) {
@@ -71,7 +83,7 @@ export const makeDataPointsEndpointHandler = ({
     }
   }
 
-  async function readDataPoint(coreRequest: CoreRequest) {
+  async function readDataPointEndpoint(coreRequest: CoreRequest) {
     try {
       const { zoneId, plantId } = coreRequest.params;
       if (!!zoneId && !!plantId) {
@@ -83,8 +95,46 @@ export const makeDataPointsEndpointHandler = ({
       }
       const key = !!zoneId ? 'zoneId' : 'plantId';
       const val = !!zoneId ? zoneId : plantId;
+      console.log({ key, val });
       const results = await dataPointService.findBy(key, val);
       return handleSuccess(results, CoreResponseStatus.ReadSuccess);
+    } catch (error) {
+      return Promise.reject(handleServiceError(error));
+    }
+  }
+
+  async function destroyDataPointEndpoint(coreRequest: CoreRequest) {
+    try {
+      const { id } = coreRequest.params;
+      await dataPointService.findById(id);
+      await dataPointService.destroy(id);
+
+      return handleSuccess(
+        { success: true },
+        CoreResponseStatus.DestroyedSuccess
+      );
+    } catch (error) {
+      return Promise.reject(handleServiceError(error));
+    }
+  }
+
+  /**
+   * Internal Function to Destroy All Datapoints for a Plant
+   * @param plantId
+   */
+  async function destroyDataPointsForPlant(plantId: string) {
+    console.log(`destroying all datapoints for the plant with ID: ${plantId}`);
+    try {
+      const dataPoints = await dataPointService.findBy('plantId', plantId);
+      console.log(dataPoints);
+      const destroyStatements = dataPoints.map((dp) =>
+        dataPointService.destroy(dp.id)
+      );
+      await Promise.all(destroyStatements);
+      return handleSuccess(
+        { success: true },
+        CoreResponseStatus.DestroyedSuccess
+      );
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }
