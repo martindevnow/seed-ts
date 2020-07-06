@@ -19,6 +19,7 @@ import {
   PlantEvents,
   PlantCreatedEvent,
 } from '../../models/plants/plant.events';
+import { events } from '../../events/events';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
@@ -137,7 +138,7 @@ export const makePlantsEndpointHandler = ({
       await plantService.findById(id);
       await plantService.destroy(id);
 
-      eventEmitter.emit(PlantEvents.DESTROYED, PlantCreatedEvent(id));
+      events.dispatch(PlantEvents.DESTROYED, PlantCreatedEvent(id));
 
       return handleSuccess(
         { success: true },

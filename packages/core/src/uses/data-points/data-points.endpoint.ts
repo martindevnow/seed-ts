@@ -1,8 +1,4 @@
-import {
-  IDataPointData,
-  IDataPoint,
-  makeDataPoint,
-} from '../../models/data-point/data-point';
+import { makeDataPoint } from '../../models/data-point/data-point';
 import {
   CoreRequest,
   RequestMethod,
@@ -11,7 +7,6 @@ import {
   CoreResponse,
   CoreResponseStatus,
 } from '../core/types/core-response.interface';
-import { Service } from '../../services/service.interface';
 import { Models } from '../../models/models';
 import { handleServiceError } from '../core/helpers/handle-error';
 import { handleSuccess } from '../core/helpers/handle-success';
@@ -21,6 +16,7 @@ import { DataPointService } from '../../services/data-point.service';
 import { MethodNotSupportedError } from '../../helpers/errors';
 import { EventEmitter } from 'events';
 import { PlantEvents } from '../../models/plants/plant.events';
+import { events } from '../../events/events';
 
 export const makeDataPointsEndpointHandler = ({
   dataPointService,
@@ -33,6 +29,10 @@ export const makeDataPointsEndpointHandler = ({
   dataPointService: DataPointService;
   eventEmitter: EventEmitter;
 }) => {
+  events.on(PlantEvents.DESTROYED, (payload) => {
+    console.log({ payload });
+  });
+
   eventEmitter.on(PlantEvents.DESTROYED, (...args) => {
     console.log({ args });
     destroyDataPointsForPlant(args[0].plantId);
