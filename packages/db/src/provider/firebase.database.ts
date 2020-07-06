@@ -31,9 +31,10 @@ export default function makeFirebaseDatabase({
     currentCollection = newCollection;
   }
 
-  async function exists(id?: string) {
+  async function exists(id?: string): Promise<boolean> {
     return (
-      id && (await database.collection(currentCollection).doc(id).get()).exists
+      !!id &&
+      (await database.collection(currentCollection).doc(id).get()).exists
     );
   }
 
