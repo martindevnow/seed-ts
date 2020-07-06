@@ -1,5 +1,5 @@
 import { IDatabase } from '@mdn-seed/db';
-import { IPlantData, makePlant, IPlant } from '../models/plants/plant';
+import { IPlantData, makePlant, IPlant } from '../models/plant';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
 import { Service } from './service.interface';
 

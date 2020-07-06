@@ -1,6 +1,6 @@
 import { IDatabase } from '@mdn-seed/db';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
-import { IZoneData, makeZone, IZone } from '../models/zones/zone';
+import { IZoneData, makeZone, IZone } from '../models/zone';
 import { Service } from './service.interface';
 
 export type ZoneService = Service<IZoneData, IZone>;

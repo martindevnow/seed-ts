@@ -1,4 +1,4 @@
-import { IPlant, makePlant } from '../../models/plants/plant';
+import { IPlant, makePlant } from '../../models/plant';
 import { MethodNotSupportedError } from '../../helpers/errors';
 import {
   CoreRequest,
@@ -15,10 +15,7 @@ import { PlantService } from '../../services/plant.service';
 import { ZoneService } from '../../services/zone.service';
 import { DataPointService } from '../../services/data-point.service';
 import { EventEmitter } from 'events';
-import {
-  PlantEvents,
-  PlantCreatedEvent,
-} from '../../models/plants/plant.events';
+import { PlantEvents, PlantCreatedEvent } from '../../events/plant.events';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
@@ -46,6 +43,7 @@ export const makePlantsEndpointHandler = ({
         )
       );
     }
+
     switch (coreRequest.method) {
       case RequestMethod.CREATE:
         return createPlant(coreRequest);
@@ -137,7 +135,14 @@ export const makePlantsEndpointHandler = ({
       await plantService.findById(id);
       await plantService.destroy(id);
 
-      eventEmitter.emit(PlantEvents.DESTROYED, PlantCreatedEvent(id));
+      // TODO: Need to look into what pattern I want to establish here.
+      // Maybe, we have PlantEvents and PlantActions
+      // Actions are things triggered externally. (try to do something)
+      // Events are triggered internally. (respond to something having been done)
+      // Then, Actions, once validated that the requesting party has permmission, executes the action
+      // That action, then optionally emits events that occurred during that action.
+      // On the handler for those events, more events CAN be dispatched. This becomes kind of like redux effects.
+      await eventEmitter.emit(PlantEvents.DESTROYED, PlantCreatedEvent(id));
 
       return handleSuccess(
         { success: true },
