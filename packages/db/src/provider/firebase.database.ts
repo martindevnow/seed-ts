@@ -18,6 +18,7 @@ export default function makeFirebaseDatabase({
   let currentCollection = '';
   return Object.freeze({
     collection,
+    exists,
     findById,
     insert,
     list,
@@ -28,6 +29,13 @@ export default function makeFirebaseDatabase({
 
   async function collection(newCollection: string) {
     currentCollection = newCollection;
+  }
+
+  async function exists(id?: string): Promise<boolean> {
+    return (
+      !!id &&
+      (await database.collection(currentCollection).doc(id).get()).exists
+    );
   }
 
   async function findById(id?: string) {
@@ -105,11 +113,12 @@ export default function makeFirebaseDatabase({
   // TODO: Alternatively, if the use-cases are minimal,
   // then, it might be better to keep the database queries explicit as well
   async function where(property: string, operator: any, value: any) {
+    console.log('WHERE', { property, operator, value });
     return (
       await database
         .collection(currentCollection)
         .where(property, operator, value)
         .get()
-    ).docs.map((doc) => doc.data());
+    ).docs.map((doc) => ({ ...doc.data(), id: doc.id }));
   }
 }

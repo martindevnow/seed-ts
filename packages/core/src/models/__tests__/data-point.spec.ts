@@ -1,5 +1,5 @@
 import { makeDataPoint, DataPointType } from '../data-point';
-import { EmptyObjectInitializationError } from '../../../helpers/errors';
+import { EmptyObjectInitializationError } from '../../helpers/errors';
 
 describe('Model: DataPoint', () => {
   it('(HAPPY) DataPoint :: has a minimum set of params that must be present', () => {

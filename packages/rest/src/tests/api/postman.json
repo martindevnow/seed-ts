@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "00354503-e39d-4e3e-a5df-09769c90491a",
+		"_postman_id": "34a0a889-2280-4aa8-b20a-740a11eef966",
 		"name": "Seed",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,7 +14,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c324ddf6-849a-4e46-8328-4c7ee09e92f3",
+								"id": "1511612b-85d8-4fea-b101-51beefa11dad",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -46,7 +46,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "99dc1a7c-3d31-41a2-af13-40b34cd6ad6f",
+								"id": "d2e918aa-79d4-4fe2-b1b3-798de1adaf50",
 								"exec": [
 									"pm.test(\"Fail POST Plant with Invalid Zone ID (404)\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([404]);\r",
@@ -88,7 +88,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a608aada-4391-4249-8d7e-cbbef6b97eb6",
+								"id": "e520ed79-1ea1-41c7-a542-115e1d5e6c87",
 								"exec": [
 									"pm.test(\"Fail POST Plant with no Status\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
@@ -130,7 +130,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3acc1ff0-3c0f-4699-b92a-78e1283e94de",
+								"id": "94232570-a097-41c5-8246-94f7b0a1c26b",
 								"exec": [
 									"pm.test(\"Successfully POST Plant\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
@@ -173,11 +173,12 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ef7b66b5-f7c7-4d93-9f8c-39521e6b3f94",
+								"id": "21c1f8c0-df48-4fa5-b8d5-08ac835a3094",
 								"exec": [
 									"pm.test(\"Successfully POST DataPoint to a Plant\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
 									"});\r",
+									"\r",
 									""
 								],
 								"type": "text/javascript"
@@ -216,7 +217,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "8d20fb20-8b24-42fe-b63a-e1126190b48d",
+								"id": "ae216e2e-e940-4983-b034-532aac4ba9f7",
 								"exec": [
 									"pm.test(\"Invalid PlantStatus => Status code is 400\", function () {",
 									"    pm.response.to.have.status(400);",
@@ -258,7 +259,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0a996b2b-6162-4e4a-847e-061c91332681",
+								"id": "9b05cab9-e0d7-46da-af46-dc017e3fc926",
 								"exec": [
 									"pm.test(\"Successful PATCH request\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -300,7 +301,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0e7f7ea9-ab2a-4230-9354-f18dfc44b1ab",
+								"id": "ec093b9c-0ff0-4265-a0e1-1c1984224a70",
 								"exec": [
 									"pm.test(\"Invalid PlantId => Status code is 404\", function () {",
 									"    pm.response.to.have.status(404);",
@@ -333,7 +334,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3fc36690-3415-43a3-89c8-3cd9a52d5a6c",
+								"id": "dadd54e5-fb8e-4a05-90f0-befb01e29c19",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -361,12 +362,66 @@
 					"response": []
 				},
 				{
+					"name": "Get Data Points FOR a Plant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3276db6a-6696-4042-82c8-f7fd09de0f79",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Have 1 DataPoint in DB\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/data-points?plantId={{plantId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"data-points"
+							],
+							"query": [
+								{
+									"key": "plantId",
+									"value": "{{plantId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Delete Plant ERROR",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "8deace33-2c37-4f5b-b61e-cb690cb370fc",
+								"id": "c2567bef-437c-48e3-bb20-c4fac2eb0f88",
 								"exec": [
 									"pm.test(\"Invalid PlantId => Status code is 404\", function () {",
 									"    pm.response.to.have.status(404);",
@@ -399,7 +454,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2dd83981-e032-4e57-98ad-bda698b8920d",
+								"id": "061e992b-dd9b-4a38-8028-5493844a2935",
 								"exec": [
 									"pm.test(\"Status code is 204\", function () {",
 									"    pm.response.to.have.status(204);",
@@ -425,6 +480,71 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Data Points FOR a deleted plant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d26fdd55-af6d-4d62-a2e9-2e0d26684df4",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Have 0 DataPoint in DB\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "67c1cd49-fbf6-45d3-a8cb-3bbd0f1becb3",
+								"exec": [
+									"setTimeout(function(){}, 500);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/data-points?plantId={{plantId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"data-points"
+							],
+							"query": [
+								{
+									"key": "plantId",
+									"value": "{{plantId}}"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -438,7 +558,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f3043b4d-3baf-4cdc-b80e-2ea22a36ce5e",
+								"id": "47259248-963e-401a-b59d-afbd2527b381",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -470,7 +590,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "473a1888-86fe-4432-8e6b-5e425f7e8c1c",
+								"id": "054a9820-46f6-4d5d-b04a-18b1a786a0e5",
 								"exec": [
 									"pm.test(\"Status code is 400\", function () {",
 									"    pm.response.to.have.status(400);",
@@ -511,7 +631,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "13e6b6d5-5418-41f9-bac2-f7a8c117575a",
+								"id": "3bcc14fd-5136-47d6-aeeb-ba8426b82ee6",
 								"exec": [
 									"pm.test(\"Successful POST request\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
@@ -550,12 +670,55 @@
 					"response": []
 				},
 				{
+					"name": "Create DataPoint FOR Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9b1f2247-0cf4-4c26-a102-41e1714fdb29",
+								"exec": [
+									"pm.test(\"Successfully POST DataPoint to a Plant\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"zoneId\": \"{{zoneId}}\",\n    \"type\": \"TEMPERATURE\",\n    \"dataValue\": \"23.6\",\n    \"dataUnit\": \"Celcius\",\n    \"timestamp\": \"1594042336\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/data-points/",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"data-points",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Plants IN a Zone",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "dec7b5de-74f8-44a8-8ee7-36cff39a071b",
+								"id": "6d6190d7-268e-45c6-95f6-4edfefaca3cc",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -589,7 +752,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "77e0c4c3-9467-423d-a645-5fe8a67fbdda",
+								"id": "9ebffb1f-0943-494f-a803-14b973ef922c",
 								"exec": [
 									"pm.test(\"Status code is 404\", function () {",
 									"    pm.response.to.have.status(404);",
@@ -622,7 +785,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9bc08cf0-a25d-483b-b33d-8d01da509614",
+								"id": "7eb72e28-6bcb-48ea-aeec-42ae17896f72",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -650,12 +813,66 @@
 					"response": []
 				},
 				{
+					"name": "Get Data Points FOR a Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2d43dd3a-c962-4084-a9bd-23ec6694c6b5",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Have 1 DataPoint in DB\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/data-points?zoneId={{zoneId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"data-points"
+							],
+							"query": [
+								{
+									"key": "zoneId",
+									"value": "{{zoneId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Update Zone ERROR",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "350e2f5f-c71a-4823-8d41-4ad7ac3dc02f",
+								"id": "f9a74495-1a65-4009-b115-7655f70bc9b9",
 								"exec": [
 									"pm.test(\"Status code is 400\", function () {",
 									"    pm.response.to.have.status(400);",
@@ -697,7 +914,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "17e66b31-02aa-45d7-9ba4-f99f2f1461c9",
+								"id": "3ebb45fe-cf29-4942-b68d-be105ed468a0",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -739,7 +956,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ea146690-666f-41b4-8aa4-8098a90618b0",
+								"id": "c98def70-6822-4672-91b3-14d37c8b2c13",
 								"exec": [
 									"pm.test(\"Status code is 404\", function () {",
 									"    pm.response.to.have.status(404);",
@@ -772,7 +989,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9a18e51a-7330-4cef-9258-f3d3fe44e8d1",
+								"id": "84e80415-4a0f-4a12-9cff-f2a85f021bf7",
 								"exec": [
 									"pm.test(\"Status code is 204\", function () {",
 									"    pm.response.to.have.status(204);",
@@ -794,6 +1011,71 @@
 							"path": [
 								"zones",
 								"{{zoneId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Data Points FOR a deleted Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7690e3cf-0956-44bc-bc10-fecca740c14e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Have 0 DataPoint in DB\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c1682220-ddac-4800-938a-5fe36726d75c",
+								"exec": [
+									"setTimeout(function(){}, 500);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/data-points?zoneId={{zoneId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"data-points"
+							],
+							"query": [
+								{
+									"key": "zoneId",
+									"value": "{{zoneId}}"
+								}
 							]
 						}
 					},

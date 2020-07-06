@@ -1,8 +1,8 @@
-import { IPlant, makePlant } from '../../models/plants/plant';
+import { IPlant, makePlant } from '../../models/plant';
 import { MethodNotSupportedError } from '../../helpers/errors';
 import {
   CoreRequest,
-  RequestMethod,
+  CoreRequestMethod,
 } from '../core/types/core-request.interface';
 import {
   CoreResponse,
@@ -14,6 +14,8 @@ import { Models } from '../../models/models';
 import { PlantService } from '../../services/plant.service';
 import { ZoneService } from '../../services/zone.service';
 import { DataPointService } from '../../services/data-point.service';
+import { PlantEvents, PlantDestroyedEvent } from '../../events/plant.events';
+import { events } from '../../events/events';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
@@ -39,14 +41,15 @@ export const makePlantsEndpointHandler = ({
         )
       );
     }
+
     switch (coreRequest.method) {
-      case RequestMethod.CREATE:
+      case CoreRequestMethod.CREATE:
         return createPlant(coreRequest);
-      case RequestMethod.READ:
+      case CoreRequestMethod.READ:
         return readPlant(coreRequest);
-      case RequestMethod.UPDATE:
+      case CoreRequestMethod.UPDATE:
         return updatePlant(coreRequest);
-      case RequestMethod.DESTROY:
+      case CoreRequestMethod.DESTROY:
         return destroyPlant(coreRequest);
       default:
         return Promise.reject(
@@ -129,6 +132,16 @@ export const makePlantsEndpointHandler = ({
       const { id } = coreRequest.params;
       await plantService.findById(id);
       await plantService.destroy(id);
+
+      // TODO: Need to look into what pattern I want to establish here.
+      // Maybe, we have PlantEvents and PlantActions
+      // Actions are things triggered externally. (try to do something)
+      // Events are triggered internally. (respond to something having been done)
+      // Then, Actions, once validated that the requesting party has permmission, executes the action
+      // That action, then optionally emits events that occurred during that action.
+      // On the handler for those events, more events CAN be dispatched. This becomes kind of like redux effects.
+      events.dispatch(PlantDestroyedEvent(id));
+
       return handleSuccess(
         { success: true },
         CoreResponseStatus.DestroyedSuccess

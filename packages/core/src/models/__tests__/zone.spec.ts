@@ -1,5 +1,5 @@
 import { makeZone } from '../zone';
-import { EmptyObjectInitializationError } from '../../../helpers/errors';
+import { EmptyObjectInitializationError } from '../../helpers/errors';
 
 describe('Model: Zone', () => {
   it('(HAPPY) Zone :: has a minimum set of params that must be present', () => {
