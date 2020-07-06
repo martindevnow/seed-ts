@@ -1,4 +1,4 @@
-import { makeDataPoint } from '../../models/data-point/data-point';
+import { makeDataPoint } from '../../models/data-point';
 import {
   CoreRequest,
   RequestMethod,
@@ -15,8 +15,7 @@ import { PlantService } from '../../services/plant.service';
 import { DataPointService } from '../../services/data-point.service';
 import { MethodNotSupportedError } from '../../helpers/errors';
 import { EventEmitter } from 'events';
-import { PlantEvents } from '../../models/plants/plant.events';
-import { events } from '../../events/events';
+import { PlantEvents } from '../../events/plant.events';
 
 export const makeDataPointsEndpointHandler = ({
   dataPointService,

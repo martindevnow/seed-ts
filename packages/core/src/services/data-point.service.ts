@@ -2,7 +2,7 @@ import {
   IDataPoint,
   IDataPointData,
   makeDataPoint,
-} from '../models/data-point/data-point';
+} from '../models/data-point';
 import { IDatabase } from '@mdn-seed/db';
 import { Service } from './service.interface';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';

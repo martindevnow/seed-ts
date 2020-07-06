@@ -1,10 +1,9 @@
-import sanitize from '../../helpers/sanitize';
+import sanitize from '../helpers/sanitize';
 import {
   RequiredParameterError,
-  EmptyObjectInitializationError,
   InvalidPropertyError,
   emptyObjectInitialization,
-} from '../../helpers/errors';
+} from '../helpers/errors';
 
 export enum Unit {
   Feet = 'FEET',

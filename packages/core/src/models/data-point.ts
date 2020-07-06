@@ -2,7 +2,7 @@ import {
   InvalidPropertyError,
   RequiredParameterError,
   emptyObjectInitialization,
-} from '../../helpers/errors';
+} from '../helpers/errors';
 
 export enum DataPointType {
   TEMPERATURE = 'TEMPERATURE',

@@ -1,4 +1,4 @@
-import { IZoneData, makeZone, IZone } from '../../models/zones/zone';
+import { IZoneData, makeZone, IZone } from '../../models/zone';
 import { MethodNotSupportedError } from '../../helpers/errors';
 import {
   CoreRequest,

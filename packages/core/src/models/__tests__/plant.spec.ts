@@ -1,5 +1,5 @@
 import { makePlant, IPlantData, PlantStatus } from '../plant';
-import { EmptyObjectInitializationError } from '../../../helpers/errors';
+import { EmptyObjectInitializationError } from '../../helpers/errors';
 
 describe('Model: Plant', () => {
   it('(HAPPY) Plant :: has a minimum set of params that must be present', () => {
