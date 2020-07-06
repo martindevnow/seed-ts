@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "00354503-e39d-4e3e-a5df-09769c90491a",
+		"_postman_id": "ea9aa56d-76d7-480f-af34-eb8658a9c62f",
 		"name": "Seed",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,7 +14,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c324ddf6-849a-4e46-8328-4c7ee09e92f3",
+								"id": "8cbba1ad-a6b6-415a-a533-1c7ff33b69d8",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -46,7 +46,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "99dc1a7c-3d31-41a2-af13-40b34cd6ad6f",
+								"id": "f29cad65-223f-4f8c-9439-0ac2b6a02f94",
 								"exec": [
 									"pm.test(\"Fail POST Plant with Invalid Zone ID (404)\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([404]);\r",
@@ -88,7 +88,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a608aada-4391-4249-8d7e-cbbef6b97eb6",
+								"id": "ac016078-dab8-4b93-b04d-44843d7db0c8",
 								"exec": [
 									"pm.test(\"Fail POST Plant with no Status\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
@@ -130,7 +130,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3acc1ff0-3c0f-4699-b92a-78e1283e94de",
+								"id": "4aeb6975-1f1b-4a94-9b52-f5ace97caf05",
 								"exec": [
 									"pm.test(\"Successfully POST Plant\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
@@ -173,7 +173,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ef7b66b5-f7c7-4d93-9f8c-39521e6b3f94",
+								"id": "95680278-134a-49f7-8fcb-6af920a7643f",
 								"exec": [
 									"pm.test(\"Successfully POST DataPoint to a Plant\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
@@ -216,7 +216,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "8d20fb20-8b24-42fe-b63a-e1126190b48d",
+								"id": "6c4d1a4c-fefb-4de3-ab60-d31014b9dbed",
 								"exec": [
 									"pm.test(\"Invalid PlantStatus => Status code is 400\", function () {",
 									"    pm.response.to.have.status(400);",
@@ -258,7 +258,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0a996b2b-6162-4e4a-847e-061c91332681",
+								"id": "35983447-d6a3-4955-82b3-9470a02c867d",
 								"exec": [
 									"pm.test(\"Successful PATCH request\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -300,7 +300,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0e7f7ea9-ab2a-4230-9354-f18dfc44b1ab",
+								"id": "5c0bb1a6-a846-4cb7-b067-7a80c7bcd917",
 								"exec": [
 									"pm.test(\"Invalid PlantId => Status code is 404\", function () {",
 									"    pm.response.to.have.status(404);",
@@ -333,7 +333,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3fc36690-3415-43a3-89c8-3cd9a52d5a6c",
+								"id": "9c6c487e-69fb-4477-a529-15c11baac5a2",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -361,12 +361,62 @@
 					"response": []
 				},
 				{
+					"name": "Get Data Points for a Plant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2beac228-56b0-4dba-9ee7-cdc16ffd99df",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/data-points?plantId={{plantId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"data-points"
+							],
+							"query": [
+								{
+									"key": "plantId",
+									"value": "{{plantId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Delete Plant ERROR",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "8deace33-2c37-4f5b-b61e-cb690cb370fc",
+								"id": "0bcc65be-e0af-4f5d-a91d-ec1cba08fde9",
 								"exec": [
 									"pm.test(\"Invalid PlantId => Status code is 404\", function () {",
 									"    pm.response.to.have.status(404);",
@@ -399,7 +449,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2dd83981-e032-4e57-98ad-bda698b8920d",
+								"id": "8acb4bb7-8973-42fc-911b-f43db441eaf7",
 								"exec": [
 									"pm.test(\"Status code is 204\", function () {",
 									"    pm.response.to.have.status(204);",
@@ -438,7 +488,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f3043b4d-3baf-4cdc-b80e-2ea22a36ce5e",
+								"id": "a484b5d5-47ae-4c04-b342-ef5bc0eefb1a",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -470,7 +520,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "473a1888-86fe-4432-8e6b-5e425f7e8c1c",
+								"id": "6d215bb0-51f7-4b47-a3ae-76a1e18c254d",
 								"exec": [
 									"pm.test(\"Status code is 400\", function () {",
 									"    pm.response.to.have.status(400);",
@@ -511,7 +561,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "13e6b6d5-5418-41f9-bac2-f7a8c117575a",
+								"id": "10cb0d95-2ccb-4f31-b029-6e54e5234941",
 								"exec": [
 									"pm.test(\"Successful POST request\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
@@ -555,7 +605,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "dec7b5de-74f8-44a8-8ee7-36cff39a071b",
+								"id": "bffc3ee7-ff15-4c88-975a-d3cc037e1053",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -589,7 +639,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "77e0c4c3-9467-423d-a645-5fe8a67fbdda",
+								"id": "60c82858-fd52-437c-b501-7b20450b7d01",
 								"exec": [
 									"pm.test(\"Status code is 404\", function () {",
 									"    pm.response.to.have.status(404);",
@@ -622,7 +672,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9bc08cf0-a25d-483b-b33d-8d01da509614",
+								"id": "ca3952dc-64cb-49fa-b4b6-3a80d4f3af8f",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -655,7 +705,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "350e2f5f-c71a-4823-8d41-4ad7ac3dc02f",
+								"id": "802be805-19c4-4311-b7bb-98a27fa0d1af",
 								"exec": [
 									"pm.test(\"Status code is 400\", function () {",
 									"    pm.response.to.have.status(400);",
@@ -697,7 +747,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "17e66b31-02aa-45d7-9ba4-f99f2f1461c9",
+								"id": "3db8965d-d37b-445f-ba59-9906b67c03ac",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -739,7 +789,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ea146690-666f-41b4-8aa4-8098a90618b0",
+								"id": "07719dcc-ce57-450a-937b-15b8d8b69301",
 								"exec": [
 									"pm.test(\"Status code is 404\", function () {",
 									"    pm.response.to.have.status(404);",
@@ -772,7 +822,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9a18e51a-7330-4cef-9258-f3d3fe44e8d1",
+								"id": "f0718c96-1f18-4ef3-9f09-be970b4486ee",
 								"exec": [
 									"pm.test(\"Status code is 204\", function () {",
 									"    pm.response.to.have.status(204);",
