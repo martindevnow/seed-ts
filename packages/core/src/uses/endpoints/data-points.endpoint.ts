@@ -1,7 +1,7 @@
 import { makeDataPoint } from '../../models/data-point';
 import {
   CoreRequest,
-  RequestMethod,
+  CoreRequestMethod,
 } from '../core/types/core-request.interface';
 import {
   CoreResponse,
@@ -14,28 +14,26 @@ import { ZoneService } from '../../services/zone.service';
 import { PlantService } from '../../services/plant.service';
 import { DataPointService } from '../../services/data-point.service';
 import { MethodNotSupportedError } from '../../helpers/errors';
-import { EventEmitter } from 'events';
 import { PlantEvents } from '../../events/plant.events';
+import { events } from '../../events/events';
+import { ZoneEvents } from '../../events/zone.events';
 
 export const makeDataPointsEndpointHandler = ({
   dataPointService,
   zoneService,
   plantService,
-  eventEmitter,
 }: {
   zoneService: ZoneService;
   plantService: PlantService;
   dataPointService: DataPointService;
-  eventEmitter: EventEmitter;
 }) => {
   events.on(PlantEvents.DESTROYED, (payload) => {
-    console.log({ payload });
+    destroyDataPointsForPlant(payload.plantId);
+  });
+  events.on(ZoneEvents.DESTROYED, (payload) => {
+    destroyDataPointsForZone(payload.zoneId);
   });
 
-  eventEmitter.on(PlantEvents.DESTROYED, (...args) => {
-    console.log({ args });
-    destroyDataPointsForPlant(args[0].plantId);
-  });
   return async function handle(
     coreRequest: CoreRequest
   ): Promise<CoreResponse> {
@@ -49,13 +47,13 @@ export const makeDataPointsEndpointHandler = ({
     }
 
     switch (coreRequest.method) {
-      case RequestMethod.CREATE:
+      case CoreRequestMethod.CREATE:
         return createDataPointEndpoint(coreRequest);
-      case RequestMethod.READ:
+      case CoreRequestMethod.READ:
         return readDataPointEndpoint(coreRequest);
-      // case RequestMethod.UPDATE:
+      // case CoreRequestMethod.UPDATE:
       //   return updateDataPoint(coreRequest);
-      case RequestMethod.DESTROY:
+      case CoreRequestMethod.DESTROY:
         return destroyDataPointEndpoint(coreRequest);
       default:
         return Promise.reject(
@@ -94,7 +92,6 @@ export const makeDataPointsEndpointHandler = ({
       }
       const key = !!zoneId ? 'zoneId' : 'plantId';
       const val = !!zoneId ? zoneId : plantId;
-      console.log({ key, val });
       const results = await dataPointService.findBy(key, val);
       return handleSuccess(results, CoreResponseStatus.ReadSuccess);
     } catch (error) {
@@ -118,14 +115,34 @@ export const makeDataPointsEndpointHandler = ({
   }
 
   /**
-   * Internal Function to Destroy All Datapoints for a Plant
+   * Internal Function to Destroy All DataPoints for a Plant
    * @param plantId
    */
   async function destroyDataPointsForPlant(plantId: string) {
-    console.log(`destroying all datapoints for the plant with ID: ${plantId}`);
+    console.log(`destroying all DataPoints for the Plant with ID: ${plantId}`);
     try {
       const dataPoints = await dataPointService.findBy('plantId', plantId);
-      console.log(dataPoints);
+      const destroyStatements = dataPoints.map((dp) =>
+        dataPointService.destroy(dp.id)
+      );
+      await Promise.all(destroyStatements);
+      return handleSuccess(
+        { success: true },
+        CoreResponseStatus.DestroyedSuccess
+      );
+    } catch (error) {
+      return Promise.reject(handleServiceError(error));
+    }
+  }
+
+  /**
+   * Internal Function to Destroy All DataPoints for a Zone
+   * @param zoneId
+   */
+  async function destroyDataPointsForZone(zoneId: string) {
+    console.log(`destroying all DataPoints for the Zone with ID: ${zoneId}`);
+    try {
+      const dataPoints = await dataPointService.findBy('zoneId', zoneId);
       const destroyStatements = dataPoints.map((dp) =>
         dataPointService.destroy(dp.id)
       );

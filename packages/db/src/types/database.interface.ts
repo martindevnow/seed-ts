@@ -6,6 +6,7 @@ export interface IDatabase {
   // update: (item: T) => Promise<Array<R>>;
   // where: (property: string, operator: any, value: any) => Promise<Array<R>>;
   // collection(table: string): void;
+  exists: (id?: string) => Promise<boolean>;
   findById: (id?: string) => Promise<any>;
   insert: (item: any) => Promise<any>;
   list: () => Promise<Array<any>>;

@@ -8,8 +8,8 @@ export const events = {
     if (!this.events[type]) return;
     this.events[type] = this.events[type].filter((fn) => fn !== cb);
   },
-  dispatch: function (type, payload) {
-    if (!this.event[type]) return;
+  dispatch: function ({ type, payload }) {
+    if (!this.events[type]) return;
     this.events[type].forEach((fn) => fn(payload));
   },
 };

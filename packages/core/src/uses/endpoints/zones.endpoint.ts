@@ -2,7 +2,7 @@ import { IZoneData, makeZone, IZone } from '../../models/zone';
 import { MethodNotSupportedError } from '../../helpers/errors';
 import {
   CoreRequest,
-  RequestMethod,
+  CoreRequestMethod,
 } from '../core/types/core-request.interface';
 import {
   CoreResponse,
@@ -14,7 +14,8 @@ import { Models } from '../../models/models';
 import { ZoneService } from '../../services/zone.service';
 import { PlantService } from '../../services/plant.service';
 import { DataPointService } from '../../services/data-point.service';
-import { EventEmitter } from 'events';
+import { events } from '../../events/events';
+import { ZoneEvents, ZoneDestroyedEvent } from '../../events/zone.events';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
@@ -23,12 +24,10 @@ export const makeZonesEndpointHandler = ({
   zoneService,
   plantService,
   dataPointService,
-  eventEmitter,
 }: {
   zoneService: ZoneService;
   plantService: PlantService;
   dataPointService: DataPointService;
-  eventEmitter: EventEmitter;
 }) => {
   return async function handle(
     coreRequest: CoreRequest
@@ -45,13 +44,13 @@ export const makeZonesEndpointHandler = ({
     // TODO: Make a helper function for this that will sanitize
     // and parse the path into something useful
     switch (coreRequest.method) {
-      case RequestMethod.CREATE:
+      case CoreRequestMethod.CREATE:
         return createZone(coreRequest);
-      case RequestMethod.READ:
+      case CoreRequestMethod.READ:
         return readZone(coreRequest);
-      case RequestMethod.UPDATE:
+      case CoreRequestMethod.UPDATE:
         return updateZone(coreRequest);
-      case RequestMethod.DESTROY:
+      case CoreRequestMethod.DESTROY:
         return destroyZone(coreRequest);
       default:
         return Promise.reject(
@@ -102,6 +101,7 @@ export const makeZonesEndpointHandler = ({
       const { id } = coreRequest.params;
       await zoneService.findById(id);
       await zoneService.destroy(id);
+      events.dispatch(ZoneDestroyedEvent(id));
       return handleSuccess(
         { success: true },
         CoreResponseStatus.DestroyedSuccess

@@ -1,3 +1,5 @@
+import { IPlant } from '../models/plant';
+
 export enum PlantEvents {
   DESTROYED = 'PLANT__DESTROYED',
   CREATED = 'PLANT__CREATED',
@@ -5,4 +7,11 @@ export enum PlantEvents {
   READ = 'PLANT__READ',
 }
 
-export const PlantCreatedEvent = (plantId: string) => ({ plantId });
+export const PlantCreatedEvent = (plant: IPlant) => ({
+  type: PlantEvents.CREATED,
+  payload: { plant },
+});
+export const PlantDestroyedEvent = (plantId: string) => ({
+  type: PlantEvents.DESTROYED,
+  payload: { plantId },
+});

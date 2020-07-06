@@ -18,6 +18,7 @@ export default function makeFirebaseDatabase({
   let currentCollection = '';
   return Object.freeze({
     collection,
+    exists,
     findById,
     insert,
     list,
@@ -28,6 +29,12 @@ export default function makeFirebaseDatabase({
 
   async function collection(newCollection: string) {
     currentCollection = newCollection;
+  }
+
+  async function exists(id?: string) {
+    return (
+      id && (await database.collection(currentCollection).doc(id).get()).exists
+    );
   }
 
   async function findById(id?: string) {

@@ -22,9 +22,6 @@ import { resolve } from 'path';
 // Environment Configuration
 config({ path: resolve(__dirname, '../../../.env') });
 import { firebaseConfig } from './db/firebase';
-import { EventEmitter } from 'events';
-
-const eventEmitter = new EventEmitter();
 
 const database = makeFirebaseDb({ config: firebaseConfig });
 const plantService = makePlantService({ database });
@@ -34,19 +31,16 @@ const handlePlantsRequest = makePlantsEndpointHandler({
   plantService,
   zoneService,
   dataPointService,
-  eventEmitter,
 });
 const handleZonesRequest = makeZonesEndpointHandler({
   plantService,
   zoneService,
   dataPointService,
-  eventEmitter,
 });
 const handleDataPointsRequest = makeDataPointsEndpointHandler({
   plantService,
   zoneService,
   dataPointService,
-  eventEmitter,
 });
 
 const app = express();

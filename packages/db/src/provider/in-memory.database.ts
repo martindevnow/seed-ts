@@ -25,6 +25,10 @@ export default function makeInMemoryDb(): IDatabase {
       }
       maps[currentMap] = new Map();
     },
+    exists: async (id?: string) => {
+      if (!id) return false;
+      return !!maps[currentMap].get(id);
+    },
     findById: async (id?: string) => {
       if (!id) {
         return Promise.reject(new RequiredParameterError('id'));

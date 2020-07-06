@@ -1,13 +1,13 @@
 import express from 'express';
-import { CoreRequest, RequestMethod } from '@mdn-seed/core';
+import { CoreRequest, CoreRequestMethod } from '@mdn-seed/core';
 import { Models } from '@mdn-seed/core';
 import { pathToFileURL } from 'url';
 
 const restMethodToCoreRequestMethod = {
-  POST: RequestMethod.CREATE,
-  PATCH: RequestMethod.UPDATE,
-  GET: RequestMethod.READ,
-  DELETE: RequestMethod.DESTROY,
+  POST: CoreRequestMethod.CREATE,
+  PATCH: CoreRequestMethod.UPDATE,
+  GET: CoreRequestMethod.READ,
+  DELETE: CoreRequestMethod.DESTROY,
 };
 
 const getModelFromString = (query: string): string | null => {
@@ -52,7 +52,7 @@ export const adaptRequest = (req: express.Request): Readonly<CoreRequest> => {
     model: extractModelFromPath(req.path),
     subModels: extractSubModelsFromPath(req.path),
     path: req.path,
-    method: restMethodToCoreRequestMethod[req.method] as RequestMethod,
+    method: restMethodToCoreRequestMethod[req.method] as CoreRequestMethod,
     params: { ...req.params, ...req.query },
     body: req.body,
   });
