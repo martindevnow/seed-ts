@@ -1,5 +1,6 @@
 import { Unit } from '../models/zone';
 import { IPlantData, PlantStatus } from '../models/plant';
+import { DataPointType, IDataPoint } from '../models/data-point';
 
 export const MOCK_ZONE = {
   name: 'Hoth',
@@ -24,4 +25,11 @@ export const MOCK_PLANT_2: IPlantData = {
   strain: 'Outdoor',
   name: 'Freebie',
   dataPoints: [],
+};
+
+export const MOCK_DATA_POINT: IDataPoint = {
+  type: DataPointType.TEMPERATURE,
+  timestamp: Date.now(),
+  dataUnit: 'C',
+  dataValue: 15,
 };

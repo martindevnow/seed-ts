@@ -78,7 +78,9 @@ export const makeZoneService = ({
         existingIndex === -1
           ? [...zone.dataPoints, dataPoint]
           : zone.dataPoints.map((dp) =>
-              dp.type === dataPoint.type ? dataPoint : dp
+              dp.type !== dataPoint.type && dp.timestamp > dataPoint.timestamp
+                ? dp
+                : dataPoint
             ),
     });
     console.log({ newZone });

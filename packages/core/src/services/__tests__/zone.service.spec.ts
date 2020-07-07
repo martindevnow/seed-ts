@@ -1,7 +1,8 @@
 import { makeZoneService } from '../zone.service';
 import { Unit, IZone, IZoneData } from '../../models/zone';
 import { IDatabase, makeInMemoryDb } from '@mdn-seed/db';
-import { MOCK_ZONE } from '../../tests/helpers';
+import { MOCK_ZONE, MOCK_DATA_POINT } from '../../tests/helpers';
+import { makeDataPoint } from '../../models/data-point';
 
 describe('Service: Zone', () => {
   let database: IDatabase;
@@ -70,5 +71,61 @@ describe('Service: Zone', () => {
     expect(actual.length).toBe(2);
     expect(actual[0]).toMatchObject({ id: id1 });
     expect(actual[1]).toMatchObject({ id: id2 });
+  });
+
+  describe('addDataPointToZone', () => {
+    it('adds a data-point that the zone did not have previously', async () => {
+      const zoneService = makeZoneService({ database });
+      const zone = await zoneService.create(MOCK_ZONE);
+      expect(zone.dataPoints.length).toBe(0);
+      const dataPoint = makeDataPoint({
+        ...MOCK_DATA_POINT,
+        zoneId: zone.id,
+      });
+      const updatedZone = await zoneService.addDataPoint(zone, dataPoint);
+      expect(updatedZone.dataPoints.length).toBe(1);
+    });
+
+    it('replaces a data-point of the same type', async () => {
+      const zoneService = makeZoneService({ database });
+      const zone = await zoneService.create(MOCK_ZONE);
+      expect(zone.dataPoints.length).toBe(0);
+      const dataPoint = makeDataPoint({
+        ...MOCK_DATA_POINT,
+        zoneId: zone.id,
+      });
+      await zoneService.addDataPoint(zone, dataPoint);
+      const updatedZone = await zoneService.addDataPoint(zone, dataPoint);
+      expect(updatedZone.dataPoints.length).toBe(1);
+    });
+
+    it('only replaces a data-point of the same type if the new one is more recent (timestamp)', async () => {
+      const zoneService = makeZoneService({ database });
+      const zone = await zoneService.create(MOCK_ZONE);
+      expect(zone.dataPoints.length).toBe(0);
+      const dataPoint = makeDataPoint({
+        ...MOCK_DATA_POINT,
+        timestamp: 10,
+        zoneId: zone.id,
+      });
+
+      const dataPoint2 = makeDataPoint({
+        ...MOCK_DATA_POINT,
+        timestamp: 20,
+        zoneId: zone.id,
+      });
+
+      const dataPoint3 = makeDataPoint({
+        ...MOCK_DATA_POINT,
+        timestamp: 1,
+        zoneId: zone.id,
+      });
+      await zoneService.addDataPoint(zone, dataPoint);
+      await zoneService.addDataPoint(zone, dataPoint2);
+      await zoneService.addDataPoint(zone, dataPoint3);
+      const updatedZone = await zoneService.addDataPoint(zone, dataPoint2);
+      expect(updatedZone.dataPoints.length).toBe(1);
+      expect(updatedZone.dataPoints[0]).toEqual(dataPoint2);
+    });
   });
 });

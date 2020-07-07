@@ -696,7 +696,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"zoneId\": \"{{zoneId}}\",\n    \"type\": \"TEMPERATURE\",\n    \"dataValue\": \"23.6\",\n    \"dataUnit\": \"Celcius\",\n    \"timestamp\": \"1594042336\"\n}",
+							"raw": "{\n    \"zoneId\": \"{{zoneId}}\",\n    \"type\": \"TEMPERATURE\",\n    \"dataValue\": \"33.6\",\n    \"dataUnit\": \"Celcius\",\n    \"timestamp\": \"1594042336\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
