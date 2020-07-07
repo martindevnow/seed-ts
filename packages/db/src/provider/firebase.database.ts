@@ -1,7 +1,6 @@
 import * as firebase from 'firebase';
 import {
   DocumentNotFoundError,
-  UniqueConstraintError,
   RequiredParameterError,
 } from '@mdn-seed/core/src/helpers/errors';
 import { IDatabase } from '../types/database.interface';
@@ -71,9 +70,10 @@ export default function makeFirebaseDatabase({
     return { ...data, id: docRef.id };
   }
 
-  async function update(item: any) {
+  async function update(item: any, options = { merge: true }) {
+    const { merge } = options;
     const docRef = await database.collection(currentCollection).doc(item.id);
-    docRef.set({ ...item }, { merge: true });
+    docRef.set({ ...item }, { merge });
     const updated = (await docRef.get()).data();
     return { ...updated, id: docRef.id };
   }

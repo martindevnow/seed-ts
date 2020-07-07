@@ -1,9 +1,10 @@
 import { IDatabase } from '@mdn-seed/db';
 import { IPlantData, makePlant, IPlant } from '../models/plant';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
-import { Service } from './service.interface';
+import { Service, HasDataPoints } from './service.interface';
+import { IDataPoint } from '../models/data-point';
 
-export type PlantService = Service<IPlantData, IPlant>;
+export type PlantService = Service<IPlantData, IPlant> & HasDataPoints<IPlant>;
 
 export const makePlantService = ({
   database,
@@ -17,6 +18,7 @@ export const makePlantService = ({
     findById,
     findBy,
     destroy,
+    addDataPoint,
   });
 
   async function create(plantData: IPlantData): Promise<IPlant> {
@@ -54,12 +56,18 @@ export const makePlantService = ({
     return results.map(documentToObj);
   }
 
-  async function update(plantData: Partial<IPlant>): Promise<IPlant> {
-    await database.collection('plants');
+  async function update(
+    plantData: Partial<IPlant>,
+    options = { merge: true }
+  ): Promise<IPlant> {
     console.log('in update', { plantData });
+    const { merge } = options;
+    await database.collection('plants');
     const current = await database.findById(plantData.id);
     const newPlant = makePlant({ ...current, ...plantData });
-    const result = await database.update(newPlant);
+    const result = await database.update(newPlant, {
+      merge,
+    });
     return documentToObj(result);
   }
 
@@ -67,6 +75,24 @@ export const makePlantService = ({
     await database.collection('plants');
     const plant = await database.destroy(id);
     return !!plant;
+  }
+
+  async function addDataPoint(plant: IPlant, dataPoint: IDataPoint) {
+    const existingIndex = plant.dataPoints.findIndex(
+      (dp) => dp.type === dataPoint.type
+    );
+    const newPlant = makePlant({
+      ...plant,
+      dataPoints:
+        existingIndex === -1
+          ? [...plant.dataPoints, dataPoint]
+          : plant.dataPoints.map((dp) =>
+              dp.type === dataPoint.type ? dataPoint : dp
+            ),
+    });
+    console.log({ newPlant });
+    const result = await database.update(newPlant, { merge: false });
+    return documentToObj(result);
   }
 
   function documentToObj(plant: IPlantData): IPlant {

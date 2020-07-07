@@ -1,3 +1,5 @@
+import { IDataPoint } from '../models/data-point';
+
 export interface Service<T, R> {
   create: (item: T) => Promise<R>;
   update: (item: Partial<R>) => Promise<R>;
@@ -18,4 +20,8 @@ export enum ServiceErrors {
   NotFound = 'NotFound',
   Duplicate = 'Duplicate',
   MissingData = 'MissingData',
+}
+
+export interface HasDataPoints<T> {
+  addDataPoint: (entity: T, dataPoint: IDataPoint) => Promise<T>;
 }

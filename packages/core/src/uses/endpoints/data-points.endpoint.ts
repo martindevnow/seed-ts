@@ -17,6 +17,7 @@ import { MethodNotSupportedError } from '../../helpers/errors';
 import { PlantEvents } from '../../events/plant.events';
 import { events } from '../../events/events';
 import { ZoneEvents } from '../../events/zone.events';
+import { DataPointCreatedEvent } from '../../events/data-points.event';
 
 export const makeDataPointsEndpointHandler = ({
   dataPointService,
@@ -74,6 +75,7 @@ export const makeDataPointsEndpointHandler = ({
 
       // Save DP
       const dp = await dataPointService.create(dataPoint);
+      events.dispatch(DataPointCreatedEvent(dp));
       return handleSuccess(dp, CoreResponseStatus.CreatedSuccess);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
