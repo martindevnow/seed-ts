@@ -50,6 +50,7 @@ app.use(bodyParser.json());
 app.all('/plants', plantsController);
 app.all('/plants/:id', plantsController);
 app.all('/data-points', dataPointsController);
+app.all('/data-points/:id', dataPointsController);
 app.all('/zones', zonesController);
 app.all('/zones/:id', zonesController);
 app.all('/zones/:id/plants', zonesController);

@@ -10,6 +10,8 @@ export const events = {
   },
   dispatch: function ({ type, payload }) {
     if (!this.events[type]) return;
+    console.log(`Events :: ${type} Dispatched`);
+    console.log({ payload });
     this.events[type].forEach((fn) => fn(payload));
   },
 };

@@ -17,7 +17,10 @@ import { MethodNotSupportedError } from '../../helpers/errors';
 import { PlantEvents } from '../../events/plant.events';
 import { events } from '../../events/events';
 import { ZoneEvents } from '../../events/zone.events';
-import { DataPointCreatedEvent } from '../../events/data-points.event';
+import {
+  DataPointCreatedEvent,
+  DataPointDestroyedEvent,
+} from '../../events/data-points.event';
 
 export const makeDataPointsEndpointHandler = ({
   dataPointService,
@@ -104,9 +107,9 @@ export const makeDataPointsEndpointHandler = ({
   async function destroyDataPointEndpoint(coreRequest: CoreRequest) {
     try {
       const { id } = coreRequest.params;
-      await dataPointService.findById(id);
+      const dataPoint = await dataPointService.findById(id);
       await dataPointService.destroy(id);
-
+      events.dispatch(DataPointDestroyedEvent(dataPoint));
       return handleSuccess(
         { success: true },
         CoreResponseStatus.DestroyedSuccess

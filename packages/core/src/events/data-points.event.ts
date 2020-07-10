@@ -11,7 +11,7 @@ export const DataPointCreatedEvent = (dataPoint: IDataPoint) => ({
   type: DataPointEvents.CREATED,
   payload: { dataPoint },
 });
-export const DataPointDestroyedEvent = (dataPointId: string) => ({
+export const DataPointDestroyedEvent = (dataPoint: IDataPoint) => ({
   type: DataPointEvents.DESTROYED,
-  payload: { dataPointId },
+  payload: { dataPoint },
 });
