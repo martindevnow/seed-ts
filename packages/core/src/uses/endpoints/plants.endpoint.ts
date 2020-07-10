@@ -37,6 +37,11 @@ export const makePlantsEndpointHandler = ({
     }
   });
 
+  events.on(DataPointEvents.DESTROYED, (payload) => {
+    if (payload?.dataPoint?.plantId) {
+      removeDataPointFromPlant(payload.dataPoint.plantId, payload.dataPoint.id);
+    }
+  });
   return async function handle(
     coreRequest: CoreRequest
   ): Promise<CoreResponse> {
@@ -164,6 +169,19 @@ export const makePlantsEndpointHandler = ({
       const plant = await plantService.findById(plantId);
       const newPlant = await plantService.addDataPoint(plant, dataPoint);
       return handleSuccess(newPlant, CoreResponseStatus.UpdatedSuccess);
+    } catch (error) {
+      return Promise.reject(handleServiceError(error));
+    }
+  }
+
+  async function removeDataPointFromPlant(plantId, dataPointId) {
+    try {
+      const plant = await plantService.findById(plantId);
+      const updatedPlant = await plantService.removeDataPoint(
+        plant,
+        dataPointId
+      );
+      return handleSuccess(updatedPlant, CoreResponseStatus.UpdatedSuccess);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }

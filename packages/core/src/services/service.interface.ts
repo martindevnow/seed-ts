@@ -24,4 +24,5 @@ export enum ServiceErrors {
 
 export interface HasDataPoints<T> {
   addDataPoint: (entity: T, dataPoint: IDataPoint) => Promise<T>;
+  removeDataPoint: (entity: T, dataPointId: string) => Promise<T>;
 }
