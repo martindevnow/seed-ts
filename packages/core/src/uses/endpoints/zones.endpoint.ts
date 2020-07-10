@@ -16,6 +16,7 @@ import { PlantService } from '../../services/plant.service';
 import { DataPointService } from '../../services/data-point.service';
 import { events } from '../../events/events';
 import { ZoneEvents, ZoneDestroyedEvent } from '../../events/zone.events';
+import { DataPointEvents } from '../../events/data-points.event';
 
 // TODO: Consider how to make this less HTTP dependant ...
 // Make sure each layer of abstraction has a purpose
@@ -29,6 +30,13 @@ export const makeZonesEndpointHandler = ({
   plantService: PlantService;
   dataPointService: DataPointService;
 }) => {
+  // TODO: Consider Observer method to register event listeners
+  events.on(DataPointEvents.CREATED, (payload) => {
+    if (payload?.dataPoint?.zoneId) {
+      attachDataPointToZone(payload.dataPoint.zoneId, payload.dataPoint);
+    }
+  });
+
   return async function handle(
     coreRequest: CoreRequest
   ): Promise<CoreResponse> {
@@ -106,6 +114,16 @@ export const makeZonesEndpointHandler = ({
         { success: true },
         CoreResponseStatus.DestroyedSuccess
       );
+    } catch (error) {
+      return Promise.reject(handleServiceError(error));
+    }
+  }
+
+  async function attachDataPointToZone(zoneId, dataPoint) {
+    try {
+      const zone = await zoneService.findById(zoneId);
+      const newZone = await zoneService.addDataPoint(zone, dataPoint);
+      return handleSuccess(newZone, CoreResponseStatus.UpdatedSuccess);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }

@@ -338,6 +338,11 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Have 1 DataPoint on Plant Document\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.dataPoints.length).to.eql(1);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -691,7 +696,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"zoneId\": \"{{zoneId}}\",\n    \"type\": \"TEMPERATURE\",\n    \"dataValue\": \"23.6\",\n    \"dataUnit\": \"Celcius\",\n    \"timestamp\": \"1594042336\"\n}",
+							"raw": "{\n    \"zoneId\": \"{{zoneId}}\",\n    \"type\": \"TEMPERATURE\",\n    \"dataValue\": \"33.6\",\n    \"dataUnit\": \"Celcius\",\n    \"timestamp\": \"1594042336\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -789,6 +794,11 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Have 1 DataPoint on Zone Document\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.dataPoints.length).to.eql(1);",
 									"});"
 								],
 								"type": "text/javascript"

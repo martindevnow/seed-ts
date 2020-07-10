@@ -1,3 +1,7 @@
+export interface UpdateOptions {
+  merge?: boolean;
+}
+
 export interface IDatabase {
   // findById: (id: string) => Promise<R>;
   // insert: (item: T) => Promise<R>;
@@ -11,7 +15,7 @@ export interface IDatabase {
   insert: (item: any) => Promise<any>;
   list: () => Promise<Array<any>>;
   destroy: (id?: string) => Promise<boolean>;
-  update: (item: any) => Promise<any>;
+  update: (item: any, options?: any) => Promise<any>;
   where: (property: string, operator: any, value: any) => Promise<Array<any>>;
   collection(table: string): void;
 }

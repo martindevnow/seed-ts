@@ -1,9 +1,10 @@
 import { IDatabase } from '@mdn-seed/db';
 import { serviceErrorFactory } from '../uses/core/helpers/handle-error';
 import { IZoneData, makeZone, IZone } from '../models/zone';
-import { Service } from './service.interface';
+import { Service, HasDataPoints } from './service.interface';
+import { IDataPoint } from '../models/data-point';
 
-export type ZoneService = Service<IZoneData, IZone>;
+export type ZoneService = Service<IZoneData, IZone> & HasDataPoints<IZone>;
 
 export const makeZoneService = ({
   database,
@@ -17,6 +18,7 @@ export const makeZoneService = ({
     findById,
     findBy,
     destroy,
+    addDataPoint,
   });
 
   async function create(zoneData: IZoneData): Promise<IZone> {
@@ -36,11 +38,15 @@ export const makeZoneService = ({
     return results.map(documentToObj);
   }
 
-  async function update(zoneData: Partial<IZone>): Promise<IZone> {
+  async function update(
+    zoneData: Partial<IZone>,
+    options = { merge: true }
+  ): Promise<IZone> {
+    const { merge } = options;
     await database.collection('zones');
     const current = await database.findById(zoneData.id);
     const newZone = makeZone({ ...current, ...zoneData });
-    const result = await database.update(newZone);
+    const result = await database.update(newZone, { merge });
     return documentToObj(result);
   }
 
@@ -60,6 +66,26 @@ export const makeZoneService = ({
     await database.collection('zones');
     const results = await database.where(property, '==', value);
     return results.map(documentToObj);
+  }
+
+  async function addDataPoint(zone: IZone, dataPoint: IDataPoint) {
+    const existingIndex = zone.dataPoints.findIndex(
+      (dp) => dp.type === dataPoint.type
+    );
+    const newZone = makeZone({
+      ...zone,
+      dataPoints:
+        existingIndex === -1
+          ? [...zone.dataPoints, dataPoint]
+          : zone.dataPoints.map((dp) =>
+              dp.type !== dataPoint.type && dp.timestamp > dataPoint.timestamp
+                ? dp
+                : dataPoint
+            ),
+    });
+    console.log({ newZone });
+    const result = await database.update(newZone, { merge: false });
+    return documentToObj(result);
   }
 
   function documentToObj(zone: IZoneData): IZone {
