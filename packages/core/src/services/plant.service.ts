@@ -19,6 +19,7 @@ export const makePlantService = ({
     findBy,
     destroy,
     addDataPoint,
+    removeDataPoint,
   });
 
   async function create(plantData: IPlantData): Promise<IPlant> {
@@ -93,6 +94,18 @@ export const makePlantService = ({
     console.log({ newPlant });
     const result = await database.update(newPlant, { merge: false });
     return documentToObj(result);
+  }
+
+  async function removeDataPoint(plant: IPlant, dataPointId: string) {
+    const newPlant = makePlant({
+      ...plant,
+      dataPoints: [...plant.dataPoints.filter((dp) => dp.id !== dataPointId)],
+    });
+    if (newPlant.dataPoints.length < plant.dataPoints.length) {
+      const result = await database.update(newPlant, { merge: false });
+      return documentToObj(result);
+    }
+    return plant;
   }
 
   function documentToObj(plant: IPlantData): IPlant {

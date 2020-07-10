@@ -19,6 +19,7 @@ export const makeZoneService = ({
     findBy,
     destroy,
     addDataPoint,
+    removeDataPoint,
   });
 
   async function create(zoneData: IZoneData): Promise<IZone> {
@@ -86,6 +87,18 @@ export const makeZoneService = ({
     console.log({ newZone });
     const result = await database.update(newZone, { merge: false });
     return documentToObj(result);
+  }
+
+  async function removeDataPoint(zone: IZone, dataPointId: string) {
+    const newZone = makeZone({
+      ...zone,
+      dataPoints: [...zone.dataPoints.filter((dp) => dp.id !== dataPointId)],
+    });
+    if (newZone.dataPoints.length < zone.dataPoints.length) {
+      const result = await database.update(newZone, { merge: false });
+      return documentToObj(result);
+    }
+    return zone;
   }
 
   function documentToObj(zone: IZoneData): IZone {

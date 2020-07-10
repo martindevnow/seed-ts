@@ -37,6 +37,12 @@ export const makeZonesEndpointHandler = ({
     }
   });
 
+  events.on(DataPointEvents.DESTROYED, (payload) => {
+    if (payload?.dataPoint?.zoneId) {
+      removeDataPointFromZone(payload.dataPoint.zoneId, payload.dataPoint.id);
+    }
+  });
+
   return async function handle(
     coreRequest: CoreRequest
   ): Promise<CoreResponse> {
@@ -124,6 +130,16 @@ export const makeZonesEndpointHandler = ({
       const zone = await zoneService.findById(zoneId);
       const newZone = await zoneService.addDataPoint(zone, dataPoint);
       return handleSuccess(newZone, CoreResponseStatus.UpdatedSuccess);
+    } catch (error) {
+      return Promise.reject(handleServiceError(error));
+    }
+  }
+
+  async function removeDataPointFromZone(zoneId, dataPointId) {
+    try {
+      const zone = await zoneService.findById(zoneId);
+      const updatedZone = await zoneService.removeDataPoint(zone, dataPointId);
+      return handleSuccess(updatedZone, CoreResponseStatus.UpdatedSuccess);
     } catch (error) {
       return Promise.reject(handleServiceError(error));
     }
