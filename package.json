@@ -9,14 +9,13 @@
     "packages/*"
   ],
   "scripts": {
-    "rest": "yarn workspace @mdn-seed/rest",
+    "client": "yarn workspace @mdn-seed/client",
+    "core": "yarn workspace @mdn-seed/core",
     "db": "yarn workspace @mdn-seed/db",
+    "rest": "yarn workspace @mdn-seed/rest",
     "start": "yarn build && node build/index.js",
     "start:dev": "nodemon",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:coverage:output": "jest --coverage --output='coverage'",
+    "test": "yarn core test && yarn rest test && yarn db test && yarn client test",
     "build": "rimraf ./build && tsc"
   },
   "dependencies": {
@@ -27,11 +26,8 @@
     "uuid": "^8.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^25.2.2",
     "@types/node": "^14.0.1",
-    "jest": "^26.0.1",
     "nodemon": "^2.0.4",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^25.5.1"
+    "rimraf": "^3.0.2"
   }
 }

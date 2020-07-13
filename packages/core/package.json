@@ -9,5 +9,10 @@
   "devDependencies": {
     "ts-node": "^8.10.2"
   },
-  "scripts": {}
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:coverage:output": "jest --coverage --output='coverage'"
+  }
 }

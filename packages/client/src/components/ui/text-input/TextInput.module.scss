@@ -1,0 +1,19 @@
+@import '../../../variables.scss';
+
+.TextInput {
+  border: 1px solid $grey;
+  padding: 0.5rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+}
+
+.Label {
+  position: absolute;
+  top: -0.1rem;
+  left: 1.2rem;
+  padding: 0 0.3rem;
+  background-color: $white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $grey;
+}
