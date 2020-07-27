@@ -17,7 +17,9 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:coverage:output": "jest --coverage --output='coverage'",
-    "build": "rimraf ./build && tsc"
+    "build": "rimraf ./build && tsc",
+    "build:rest": "docker build --tag seed_ts -f Dockerfile.rest .",
+    "start:rest": "docker run -p 9000:9000 seed_ts:latest"
   },
   "dependencies": {
     "@types/uuid": "^8.0.0",
