@@ -1,0 +1,12 @@
+FROM node:12.18.2
+
+WORKDIR /usr/src/app
+COPY package*.json /usr/src/app
+RUN cd /usr/src/app
+COPY . /usr/src/app/
+# ENV NODE_ENV=production
+RUN yarn install
+# RUN cp -a /tmp/node_modules /usr/src/app/
+
+EXPOSE 9000
+CMD ["yarn", "rest", "start"]
